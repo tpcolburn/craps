@@ -1,0 +1,15 @@
+{
+  "name": "Craps — Trainer + Play",
+  "short_name": "Craps",
+  "description": "Craps trainer that grades your bet selection and money management against an optimal-edge bettor, with betting-system drills.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14142a",
+  "theme_color": "#1a1a2e",
+  "categories": ["games", "education"],
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
