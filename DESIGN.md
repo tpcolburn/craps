@@ -6,6 +6,24 @@ same localStorage persistence, and the same PWA shell. No card counting (irrelev
 
 ---
 
+## Status — landscape redesign shipped
+
+The portrait zone-grid prototype has been replaced by a **realistic landscape Vegas table**
+(wood rail, green felt, casino lettering, ON/OFF puck, chip rail, tumbling dice). The betting
+engine was rewritten as a standalone, separately-tested module (unit payouts + Monte-Carlo
+edge convergence + bankroll-conservation fuzz, 59 passing checks) and the UI verified through a
+DOM-shim harness (23 checks) plus an 8,000-cycle render fuzz.
+
+**Live now:** full 3-4-5× free odds (pass/don't), come / don't-come with odds that travel to the
+number boxes, place 4–10, field (2× on 2 / 3× on 12), big 6/8, all four hardways, any-7, any-craps,
+and individual 2/3/11/12. The optimal-edge **shadow bettor** plays the line at your stake with
+**max odds** on the same dice; the Stats page grades line discipline, odds discipline, and edge
+avoidance, and shows your gap to optimal. Working bets are correctly **returned** (not forfeited)
+when a cycle ends. Portrait shows a "rotate to play" overlay; the service worker is network-first so
+redeploys reach returning visitors immediately. The roadmap sections below are retained for context.
+
+---
+
 ## 0. The core design problem (read this first)
 
 In blackjack, skill lives in the **in-round decision** (hit/stand/double/split), so the trainer grades

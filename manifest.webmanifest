@@ -1,13 +1,13 @@
 {
-  "name": "Craps — Trainer + Play",
+  "name": "Craps — Trainer Table",
   "short_name": "Craps",
-  "description": "Craps trainer that grades your bet selection and money management against an optimal-edge bettor, with betting-system drills.",
+  "description": "A realistic landscape craps table that grades your bet selection and money management against an optimal-edge bettor playing the same dice.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#14142a",
-  "theme_color": "#1a1a2e",
+  "orientation": "landscape",
+  "background_color": "#07140e",
+  "theme_color": "#0b3d22",
   "categories": ["games", "education"],
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }

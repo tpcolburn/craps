@@ -2,389 +2,709 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Craps">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" content="#0b3d22">
 <link rel="manifest" href="manifest.webmanifest">
-<title>Craps — Trainer + Play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Craps &mdash; Trainer Table</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: radial-gradient(ellipse 120% 80% at 50% -10%, #262649 0%, #16162c 55%, #0e0e1c 100%) fixed, #14142a;
-  min-height: 100vh; min-height: -webkit-fill-available; display: flex; align-items: flex-start; justify-content: center;
-  padding: max(env(safe-area-inset-top,0px),0.5rem) 1rem max(env(safe-area-inset-bottom,0px),1rem); color:#e0e0e0; }
-html { height: -webkit-fill-available; }
-#app { width: 100%; max-width: 620px; padding: 0 0.5rem; }
-.topbar { background: linear-gradient(180deg,#1c2b4f,#15213c); border-radius: 14px; padding: 12px 16px; margin-bottom: 12px;
-  display: flex; justify-content: space-between; align-items: center; border: 1px solid #25406e;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05); }
-.bankroll-main { font-size: 22px; font-weight: 700; }
-.bankroll-sub { font-size: 12px; color: #8888aa; margin-top: 2px; }
-.nav-btn { background: linear-gradient(180deg,#16498a,#0f3460); color:#bcd6ff; border:1px solid #2a5da0; border-radius:9px;
-  padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer; }
-.felt { position: relative; background: radial-gradient(ellipse 100% 90% at 50% 38%, #218a48, #176e39 45%, #0f4f28);
-  border-radius: 18px; padding: 18px; margin-bottom: 14px; border: 3px solid #0a3018;
-  box-shadow: inset 0 0 36px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06), 0 6px 18px rgba(0,0,0,0.45); }
-.statline { display:flex; justify-content:space-between; align-items:center; color:#d7f0df; font-size:13px; margin-bottom:10px; }
-.point-pill { font-weight:800; font-size:13px; padding:4px 12px; border-radius:14px; border:2px solid; }
-.point-on { color:#ffd96b; border-color:#ffd96b; background:rgba(255,217,107,0.12); }
-.point-off { color:#8fcfa6; border-color:#3a7d52; }
-.dice-row { display:flex; gap:14px; justify-content:center; margin:6px 0 14px; }
-.die { width:56px; height:56px; border-radius:12px; background:linear-gradient(150deg,#fff,#e7e9f0); color:#1b1b22;
-  display:flex; align-items:center; justify-content:center; font-size:34px; font-weight:800; line-height:1;
-  box-shadow:0 3px 8px rgba(0,0,0,0.4); border:1px solid #c8ccd6; }
-.he-read { text-align:center; font-size:11px; color:#bfe6cc; margin-bottom:12px; }
-.he-read b { color:#fff; }
-.zones { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
-.zone { background:rgba(0,0,0,0.18); border:1.5px solid rgba(255,255,255,0.14); border-radius:10px; padding:9px 11px; cursor:pointer; position:relative; }
-.zone.on { border-color:#ffd96b; box-shadow:0 0 10px rgba(255,217,107,0.30); }
-.zone.dis { opacity:0.4; cursor:default; }
-.zone .zt { font-size:11px; font-weight:700; letter-spacing:.4px; color:#eaf6ee; }
-.zone .za { font-size:17px; font-weight:800; margin-top:1px; }
-.zone .zhe { font-size:10px; margin-top:1px; }
-.t-good .zhe{color:#7fe6a3} .t-ok .zhe{color:#ffd96b} .t-bad .zhe{color:#ff9a8a}
-.t-good{border-left:4px solid #2ecc71} .t-ok{border-left:4px solid #f0c040} .t-bad{border-left:4px solid #e8604c}
-.controls { background:#16213e; border-radius:12px; padding:14px 16px; border:1px solid #0f3460; }
-.row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
-.lbl { font-size:12px; color:#8888aa; font-weight:600; }
-.btn { padding:12px 20px; font-size:15px; font-weight:700; border-radius:9px; cursor:pointer; border:none; font-family:inherit;
-  min-height:48px; box-shadow:0 2px 5px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); touch-action:manipulation; }
-.btn:disabled { opacity:.35; cursor:default; }
-.btn:not(:disabled):active { transform: scale(0.97); }
-.btn-action { background:linear-gradient(180deg,#163f73,#0e2f57); color:#c8ddf5; border:1.5px solid #28548f; }
-.btn-roll { background:linear-gradient(180deg,#279b50,#176e39); color:#eafff0; border:1.5px solid #34c46f; font-size:16px; padding:12px 30px; text-shadow:0 1px 2px rgba(0,0,0,0.3); }
-.chip { display:inline-flex; align-items:center; justify-content:center; width:46px; height:46px; border-radius:50%;
-  font-weight:800; font-size:12px; color:#fff; cursor:pointer; user-select:none;
-  box-shadow:0 3px 6px rgba(0,0,0,0.45), inset 0 0 0 4px rgba(255,255,255,0.16), inset 0 7px 9px rgba(255,255,255,0.18), inset 0 -9px 11px rgba(0,0,0,0.3); }
-.chip.sel { outline:3px solid #ffd96b; outline-offset:2px; }
-.chip-5{background:radial-gradient(circle at 50% 38%,#d9503f,#b5311f)} .chip-25{background:radial-gradient(circle at 50% 38%,#259c5b,#166a38)}
-.chip-100{background:radial-gradient(circle at 50% 38%,#e8691a,#b54400)}
-.hint { background:#0d2f2b; border:1.5px solid #1e5a55; color:#9fe0d6; border-radius:9px; padding:10px 14px; margin-bottom:12px; font-size:13px; }
-.hint strong{color:#fff}
-.res { border-radius:10px; padding:9px 13px; margin-bottom:6px; font-size:14px; font-weight:700; border:2px solid; }
-.res-win{background:#0d3320;color:#2ecc71;border-color:#1e8449} .res-loss{background:#2c0f0f;color:#e74c3c;border-color:#a32d2d}
-.res-info{background:#1a1a30;color:#9aa6c8;border-color:#333366}
-.log { font-size:12px; color:#8899bb; margin-top:8px; max-height:104px; overflow:auto; }
-.log div{padding:1px 0}
-.foot { text-align:center; font-size:11px; color:#334466; margin-top:10px; padding-bottom:1rem; }
-/* stats */
-.stats-page{background:#16213e;border-radius:12px;padding:18px;border:1px solid #0f3460}
-.stats-hdr{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-.back-link{background:none;border:none;color:#6688aa;font-size:14px;cursor:pointer;font-family:inherit}
-.stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.stat-card{background:#0f1f3a;border-radius:10px;padding:12px 14px;border:1px solid #1a3060}
-.sc-label{font-size:10px;color:#6688aa;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
-.sc-val{font-size:20px;font-weight:800}
-.sc-sub{font-size:11px;color:#6688aa;margin-top:3px}
-.c-green{color:#2ecc71}.c-red{color:#e74c3c}.c-amber{color:#f39c12}.c-muted{color:#6688aa}
-.gap-banner{border-radius:9px;padding:10px 14px;margin-bottom:14px;font-size:13px;font-weight:700}
-.section{background:#0f1f3a;border-radius:10px;padding:14px;margin-bottom:14px;border:1px solid #1a3060}
-.section h3{font-size:11px;font-weight:700;color:#6688aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-.cat-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
-.pbar{height:6px;border-radius:3px;background:#1a3060;overflow:hidden;margin-bottom:10px}
-.pbar-fill{height:100%;border-radius:3px}
-.hist-row{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #1a3060}
-.reset-link{background:none;border:none;color:#553366;font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline;display:block;margin:10px auto 0}
-.tierbar{display:flex;height:22px;border-radius:6px;overflow:hidden;margin-top:4px;font-size:10px;font-weight:700}
-.tierbar div{display:flex;align-items:center;justify-content:center;color:#06210f}
+:root{
+  --felt:#1f8049; --felt-d:#0f5a30; --felt-dd:#0a3f21;
+  --cream:#f4ecd4; --cream-d:#d9caa0; --gold:#e9c46a; --red:#c4382b; --red-d:#8f261d;
+  --wood1:#7a5230; --wood2:#5a3a1e; --wood3:#3d2712;
+  --ink:#0c1a12; --panel:#10261a; --panel2:#0c1e15; --line:#2a4d38;
+  --good:#39d07f; --great:#7af0b0; --ok:#5fd0c0; --weak:#f0c040; --bad:#f08a3c; --worst:#ec5b4c; --muted:#6f8f7c;
+  --cond:'Oswald','Arial Narrow','Roboto Condensed','Helvetica Neue',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;height:-webkit-fill-available;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e7efe9;overflow:hidden;
+  background:radial-gradient(ellipse 120% 90% at 50% -5%,#16352a 0%,#0c1f17 55%,#07140e 100%) fixed,#07140e;}
+#app{display:flex;flex-direction:column;height:100dvh;height:100svh;width:100%;max-width:1040px;margin:0 auto;
+  padding:max(env(safe-area-inset-top),4px) max(env(safe-area-inset-right),6px) max(env(safe-area-inset-bottom),4px) max(env(safe-area-inset-left),6px);gap:5px;}
+.top{display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,#13241b,#0c1a12);
+  border:1px solid var(--line);border-radius:12px;padding:5px 10px;flex:0 0 auto;box-shadow:0 2px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04);}
+.brk{display:flex;flex-direction:column;line-height:1.05;}
+.brk .v{font-size:19px;font-weight:800;letter-spacing:.2px;}
+.brk .s{font-size:10px;color:var(--muted);margin-top:1px;}
+.brk .s b{font-weight:700;}
+.spacer{flex:1;}
+.qpill{font-family:var(--cond);font-weight:700;font-size:12px;padding:4px 10px;border-radius:20px;border:1.5px solid;letter-spacing:.4px;text-transform:uppercase;}
+.btn{font-family:var(--cond);font-weight:600;cursor:pointer;border-radius:9px;border:1px solid;touch-action:manipulation;letter-spacing:.4px;}
+.btn:active{transform:scale(.96);}
+.btn:disabled{opacity:.35;}
+.navb{background:linear-gradient(180deg,#16402a,#0e2c1c);color:#bfe8cd;border-color:#27613f;padding:7px 12px;font-size:13px;}
+.rail{flex:1 1 auto;min-height:0;border-radius:20px;padding:9px;position:relative;
+  background:linear-gradient(150deg,var(--wood1),var(--wood2) 45%,var(--wood3));
+  box-shadow:0 8px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,210,150,.25),inset 0 -2px 6px rgba(0,0,0,.5);}
+.felt{position:relative;height:100%;width:100%;border-radius:13px;padding:8px;overflow:hidden;
+  background:radial-gradient(ellipse 110% 130% at 50% 18%,var(--felt) 0%,var(--felt-d) 52%,var(--felt-dd) 100%);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.5),inset 0 0 0 2px rgba(244,236,212,.16);
+  display:grid;grid-template-rows:auto auto 1fr auto auto auto;gap:5px;}
+.felt::after{content:"";position:absolute;left:6px;right:6px;bottom:4px;height:46%;border:2px solid rgba(244,236,212,.10);
+  border-bottom:none;border-radius:50% 50% 0 0/100% 100% 0 0;pointer-events:none;}
+.cell{position:relative;border-radius:8px;cursor:pointer;border:1.5px solid rgba(244,236,212,.34);
+  background:rgba(4,30,16,.30);overflow:hidden;-webkit-user-select:none;user-select:none;transition:box-shadow .12s,border-color .12s,background .12s;}
+.cell .lab{font-family:var(--cond);text-transform:uppercase;letter-spacing:.6px;}
+.cell.dis{opacity:.34;cursor:default;}
+.cell.live:active{transform:scale(.985);}
+.cell.has{border-color:var(--gold);box-shadow:0 0 11px rgba(233,196,106,.4),inset 0 0 14px rgba(233,196,106,.10);}
+.cell .pay{position:absolute;bottom:2px;right:5px;font-size:8.5px;color:rgba(244,236,212,.55);font-family:var(--cond);letter-spacing:.3px;}
+.t-great{box-shadow:inset 4px 0 0 var(--great);} .t-good{box-shadow:inset 4px 0 0 var(--good);}
+.t-ok{box-shadow:inset 4px 0 0 var(--ok);} .t-weak{box-shadow:inset 4px 0 0 var(--weak);}
+.t-bad{box-shadow:inset 4px 0 0 var(--bad);} .t-worst{box-shadow:inset 4px 0 0 var(--worst);}
+.cell.has.t-great,.cell.has.t-good,.cell.has.t-ok,.cell.has.t-weak,.cell.has.t-bad,.cell.has.t-worst{box-shadow:0 0 11px rgba(233,196,106,.45);}
+.nums{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}
+.numbox{display:flex;flex-direction:column;align-items:stretch;min-height:50px;background:rgba(4,30,16,.26);}
+.numbox .nlab{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--cond);font-weight:700;
+  font-size:clamp(15px,3.4vw,24px);color:var(--cream);letter-spacing:1px;text-shadow:0 1px 2px rgba(0,0,0,.5);}
+.numbox .pstrip{height:15px;border-top:1px solid rgba(244,236,212,.22);display:flex;align-items:center;justify-content:center;
+  font-family:var(--cond);font-size:8.5px;letter-spacing:.6px;color:rgba(244,236,212,.5);text-transform:uppercase;}
+.numbox.pointbox .nlab{color:var(--gold);}
+.r2{display:grid;grid-template-columns:1.25fr 4fr;gap:5px;}
+.dc{display:flex;align-items:center;justify-content:center;min-height:38px;}
+.come{display:flex;align-items:center;justify-content:center;min-height:38px;
+  background:repeating-linear-gradient(135deg,rgba(4,30,16,.26),rgba(4,30,16,.26) 13px,rgba(244,236,212,.05) 13px,rgba(244,236,212,.05) 26px);}
+.come .lab{font-size:clamp(16px,3.6vw,26px);font-weight:700;color:var(--cream);}
+.dc .lab{font-size:clamp(9px,1.9vw,13px);font-weight:600;color:var(--cream-d);text-align:center;line-height:1.04;}
+.mid{display:grid;grid-template-columns:3.1fr 2.5fr 1.25fr;gap:5px;min-height:0;}
+.field{display:flex;flex-direction:column;background:rgba(4,30,16,.24);}
+.field .ftitle{font-family:var(--cond);font-weight:700;font-size:12px;letter-spacing:2px;color:var(--cream);text-align:center;padding:3px 0 1px;}
+.field .fnums{flex:1;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;padding:0 4px 3px;gap:2px;}
+.field .fn{font-family:var(--cond);font-weight:600;font-size:clamp(11px,2.3vw,16px);color:#eaf3ec;}
+.field .fn.dbl{display:inline-flex;align-items:center;justify-content:center;width:clamp(20px,4.4vw,30px);height:clamp(20px,4.4vw,30px);
+  border:1.5px solid var(--gold);border-radius:50%;color:var(--gold);font-size:clamp(9px,2vw,13px);}
+.field .fn.dbl small{font-size:7px;}
+.props{display:grid;grid-template-rows:auto 1fr auto;gap:3px;}
+.any7{display:flex;align-items:center;justify-content:center;min-height:20px;background:rgba(80,12,12,.30);border-color:rgba(236,91,76,.5)!important;}
+.any7 .lab{font-size:11px;font-weight:700;color:#ffd9d2;}
+.hards{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;min-height:0;}
+.hard{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px;}
+.hard .hd{display:flex;gap:2px;}
+.hard .hd i{width:6px;height:6px;border-radius:1px;background:var(--cream);display:block;}
+.hard .hl{font-family:var(--cond);font-size:8px;color:rgba(244,236,212,.6);letter-spacing:.3px;}
+.craps4{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
+.cnum{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:22px;padding:1px;}
+.cnum .cn{font-family:var(--cond);font-weight:700;font-size:13px;color:var(--cream);}
+.cnum .cp{font-size:7px;color:rgba(244,236,212,.55);font-family:var(--cond);}
+.bigs{display:grid;grid-template-rows:1fr 1fr;gap:5px;}
+.big{display:flex;align-items:center;justify-content:center;}
+.big .lab{font-size:clamp(11px,2.2vw,15px);font-weight:700;color:var(--cream);}
+.dpass{display:flex;align-items:center;justify-content:center;min-height:26px;background:rgba(4,30,16,.30);}
+.dpass .lab{font-size:clamp(10px,2vw,14px);font-weight:600;color:var(--cream-d);letter-spacing:1px;}
+.oddsbar{display:flex;align-items:center;justify-content:center;min-height:22px;
+  background:repeating-linear-gradient(90deg,rgba(4,30,16,.22),rgba(4,30,16,.22) 9px,rgba(233,196,106,.10) 9px,rgba(233,196,106,.10) 18px);}
+.oddsbar .lab{font-size:clamp(9px,1.9vw,13px);font-weight:700;color:var(--gold);letter-spacing:1.5px;}
+.pass{display:flex;align-items:center;justify-content:center;min-height:30px;border-width:2px;border-color:rgba(244,236,212,.6);
+  background:linear-gradient(180deg,rgba(196,56,43,.26),rgba(4,30,16,.30));}
+.pass .lab{font-size:clamp(13px,2.7vw,19px);font-weight:700;color:#ffe4dd;letter-spacing:2px;text-shadow:0 1px 2px rgba(0,0,0,.5);}
+.puck{position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--cond);font-weight:700;font-size:8px;letter-spacing:.5px;z-index:5;box-shadow:0 2px 5px rgba(0,0,0,.5);}
+.puck.on{background:radial-gradient(circle at 40% 35%,#fff,#dfe6df);color:#0a3f21;border:2px solid #0a3f21;}
+.puck.off{background:radial-gradient(circle at 40% 35%,#3a3a3a,#161616);color:#cfd6cf;border:2px solid #cfd6cf;}
+.puck-off-slot{position:absolute;top:5px;left:7px;z-index:6;}
+.bchip{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;
+  font-family:var(--cond);box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.4),inset 0 -3px 5px rgba(0,0,0,.32);z-index:4;pointer-events:none;}
+.bchip.sz-f{width:27px;height:27px;font-size:9.5px;}
+.bchip.sz-o{width:22px;height:22px;font-size:8px;border-style:dashed;}
+.bchip .tg{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:7px;color:#0c1a12;background:var(--gold);
+  border-radius:4px;padding:0 3px;font-weight:700;letter-spacing:.3px;}
+.wt{background:radial-gradient(circle at 42% 35%,#fff,#cfd2cc);color:#222;} .rd{background:radial-gradient(circle at 42% 35%,#e0503f,#a3261a);}
+.gn{background:radial-gradient(circle at 42% 35%,#2fae63,#136b38);} .bk{background:radial-gradient(circle at 42% 35%,#3a3f3c,#111513);}
+.pp{background:radial-gradient(circle at 42% 35%,#9b59b6,#5e2a78);}
+.cstack-come{top:3px;left:3px;} .cstack-place{bottom:2px;left:50%;transform:translateX(-50%);}
+.cstack-dc{top:3px;right:3px;} .cstack-mid{top:50%;left:50%;transform:translate(-50%,-50%);}
+.oddsbadge{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--gold);color:#0c1a12;font-weight:800;font-size:11px;
+  display:flex;align-items:center;justify-content:center;z-index:7;box-shadow:0 1px 3px rgba(0,0,0,.5);cursor:pointer;border:1px solid #0c1a12;}
+.ob-come{top:1px;left:30px;} .ob-dc{top:1px;right:30px;}
+.tray{position:absolute;top:6px;right:8px;display:flex;gap:7px;z-index:8;}
+.die{width:30px;height:30px;border-radius:6px;background:linear-gradient(150deg,#fff,#e6e8e2);border:1px solid #c4c8bf;box-shadow:0 3px 6px rgba(0,0,0,.45);padding:3px;}
+.die .pg{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);width:100%;height:100%;}
+.die .pg i{display:flex;align-items:center;justify-content:center;}
+.die .pg i.on::after{content:"";width:5px;height:5px;border-radius:50%;background:#16241b;box-shadow:0 0 1px rgba(0,0,0,.4);}
+@keyframes tumble{0%{transform:translateY(-7px) rotate(-22deg);}25%{transform:translateY(3px) rotate(16deg);}
+  50%{transform:translateY(-4px) rotate(-12deg);}75%{transform:translateY(2px) rotate(8deg);}100%{transform:translateY(0) rotate(0);}}
+.die.shake{animation:tumble .42s ease-out;}
+.toast{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);z-index:9;display:flex;flex-direction:column;gap:3px;align-items:center;width:max-content;max-width:94%;pointer-events:none;}
+.msg{font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.3px;padding:3px 11px;border-radius:7px;border:1px solid;
+  background:rgba(8,20,14,.92);backdrop-filter:blur(2px);box-shadow:0 2px 7px rgba(0,0,0,.4);}
+.m-win{color:var(--good);border-color:#1e8449;} .m-lose{color:var(--worst);border-color:#a3261a;} .m-info{color:#a9c4b5;border-color:#2a4d38;}
+.netbadge{font-family:var(--cond);font-weight:700;font-size:13px;padding:3px 13px;border-radius:8px;border:1.5px solid;}
+.bot{flex:0 0 auto;display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,#13241b,#0b1810);
+  border:1px solid var(--line);border-radius:13px;padding:6px 9px;box-shadow:0 -1px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.04);}
+.chips{display:flex;gap:6px;}
+.chip{position:relative;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-family:var(--cond);font-weight:800;font-size:12px;color:#fff;flex:0 0 auto;
+  box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 0 0 4px rgba(255,255,255,.18),inset 0 6px 8px rgba(255,255,255,.16),inset 0 -8px 9px rgba(0,0,0,.3);}
+.chip:active{transform:scale(.94);}
+.chip.sel{outline:3px solid var(--gold);outline-offset:2px;}
+.chip .ring{position:absolute;inset:4px;border-radius:50%;border:2px dashed rgba(255,255,255,.35);}
+.readout{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.1;}
+.readout .ph{font-family:var(--cond);font-weight:700;font-size:12px;letter-spacing:.6px;text-transform:uppercase;}
+.readout .ph .pn{color:var(--gold);} .readout .ph .co{color:#7af0b0;}
+.readout .ar{font-size:10px;color:var(--muted);margin-top:1px;}
+.readout .ar b{color:#dfe9e2;}
+.tip{font-size:10px;color:#86b39a;margin-top:1px;display:block;}
+.actcol{display:flex;gap:6px;align-items:center;}
+.minib{background:linear-gradient(180deg,#22382a,#162a1d);color:#bcd6c5;border-color:#2d5740;padding:8px 10px;font-size:12px;}
+.rollb{background:linear-gradient(180deg,#2bb05c,#15803d);color:#eafff1;border:1.5px solid #3ad07a;font-size:16px;font-weight:700;
+  padding:11px 22px;text-shadow:0 1px 2px rgba(0,0,0,.3);border-radius:11px;min-width:96px;}
+.rollb:not(:disabled):active{transform:scale(.97);}
+#rotate{display:none;position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 30%,#16352a,#07140e);
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px;}
+#rotate .ph{font-size:54px;animation:tip 1.8s ease-in-out infinite;}
+@keyframes tip{0%,100%{transform:rotate(0);}50%{transform:rotate(-90deg);}}
+#rotate h2{font-family:var(--cond);font-weight:700;font-size:22px;letter-spacing:1px;}
+#rotate p{color:#9ab8a6;font-size:14px;max-width:300px;}
+@media (orientation:portrait) and (max-width:920px){ #rotate{display:flex;} #app{display:none;} }
+.stats{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(180deg,#0c1f17,#07140e);border-radius:13px;padding:16px;z-index:20;}
+.stats-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.back{background:none;border:none;color:#7fae93;font-size:14px;cursor:pointer;font-family:var(--cond);font-weight:600;}
+.stats h2{font-family:var(--cond);font-weight:700;font-size:20px;letter-spacing:.5px;}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px;}
+.card{background:#10261a;border:1px solid var(--line);border-radius:10px;padding:10px 12px;}
+.card .l{font-family:var(--cond);font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
+.card .v{font-size:19px;font-weight:800;} .card .sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.c-green{color:var(--good);} .c-red{color:var(--worst);} .c-amber{color:var(--weak);} .c-muted{color:var(--muted);}
+.banner{border-radius:9px;padding:9px 13px;margin-bottom:13px;font-size:13px;font-weight:600;font-family:var(--cond);letter-spacing:.3px;}
+.sect{background:#10261a;border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:13px;}
+.sect h3{font-family:var(--cond);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:11px;}
+.catrow{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;}
+.bar{height:6px;border-radius:3px;background:#16321f;overflow:hidden;margin-bottom:11px;}
+.bar > div{height:100%;border-radius:3px;}
+.histrow{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid #16321f;}
+.resetl{background:none;border:none;color:#7a5a86;font-size:12px;cursor:pointer;font-family:var(--cond);text-decoration:underline;display:block;margin:8px auto 4px;}
+.legend{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;font-family:var(--cond);}
+.legend span{display:inline-flex;align-items:center;gap:4px;}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block;}
 </style>
 </head>
 <body>
+<div id="rotate"><div class="ph">&#128241;</div><h2>ROTATE TO PLAY</h2><p>The craps table is built for landscape. Turn your device sideways to take a seat.</p></div>
 <div id="app"></div>
 <script>
-// ════════════ ENGINE ════════════
-var PIPS=['','⚀','⚁','⚂','⚃','⚄','⚅'];
-// House edge + tier metadata for every supported bet (drives teaching + grading)
-var BET_META = {
-  pass:{name:'Pass line', he:'1.41%', tier:'good'}, dont:{name:"Don't pass", he:'1.36%', tier:'good'},
-  passOdds:{name:'Pass odds', he:'0%', tier:'good'}, dontOdds:{name:'Lay odds', he:'0%', tier:'good'},
-  place6:{name:'Place 6', he:'1.52%', tier:'ok'}, place8:{name:'Place 8', he:'1.52%', tier:'ok'},
-  field:{name:'Field', he:'2.78%', tier:'bad'}, any7:{name:'Any 7', he:'16.7%', tier:'bad'},
-  hard6:{name:'Hard 6', he:'9.1%', tier:'bad'}, hard8:{name:'Hard 8', he:'9.1%', tier:'bad'}
+/* ════════════════════════════════════════════════════════════════
+   CRAPS ENGINE — verified by node harness (unit + Monte-Carlo edge +
+   conservation tests). applyRoll(S,[d1,d2]) mutates S and returns
+   {total,hard,msgs,cycleEnded,pointSet,line}. 3-4-5x odds. Stake is
+   assumed already deducted at placement; engine only adds winnings /
+   returned stakes back to S.br.
+   ════════════════════════════════════════════════════════════════ */
+function W(stake,n,d){return Math.floor(stake*n/d);}
+function oddsPay(p){return (p===4||p===10)?[2,1]:(p===5||p===9)?[3,2]:[6,5];}
+function layPay(p){return (p===4||p===10)?[1,2]:(p===5||p===9)?[2,3]:[5,6];}
+function placePay(n){return (n===4||n===10)?[9,5]:(n===5||n===9)?[7,5]:[7,6];}
+function oddsCapMult(p){return (p===4||p===10)?3:(p===5||p===9)?4:5;}
+function freshBets(){
+  return {
+    pass:0,passOdds:0,dont:0,dontOdds:0,
+    field:0,any7:0,anyCraps:0,c2:0,c3:0,c11:0,c12:0,big6:0,big8:0,
+    place:{4:0,5:0,6:0,8:0,9:0,10:0},
+    hard:{4:0,6:0,8:0,10:0},
+    come:{box:0,pts:{4:{f:0,o:0},5:{f:0,o:0},6:{f:0,o:0},8:{f:0,o:0},9:{f:0,o:0},10:{f:0,o:0}}},
+    dcome:{box:0,pts:{4:{f:0,o:0},5:{f:0,o:0},6:{f:0,o:0},8:{f:0,o:0},9:{f:0,o:0},10:{f:0,o:0}}}
+  };
+}
+function oneRoll(S,k,wins,n,den,R,label){
+  var s=S.bets[k]; if(s<=0) return;
+  if(wins){var w=W(s,n,den); S.br+=s+w; R.push({kind:'win',text:label+' +$'+w});}
+  else{R.push({kind:'lose',text:label+' \u2212$'+s});}
+  S.bets[k]=0;
+}
+function returnStanding(S,R){
+  var b=S.bets,ret=0;
+  [4,5,6,8,9,10].forEach(function(n){if(b.place[n]>0){ret+=b.place[n];b.place[n]=0;}});
+  [4,6,8,10].forEach(function(n){if(b.hard[n]>0){ret+=b.hard[n];b.hard[n]=0;}});
+  if(b.big6>0){ret+=b.big6;b.big6=0;} if(b.big8>0){ret+=b.big8;b.big8=0;}
+  if(b.come.box>0){ret+=b.come.box;b.come.box=0;} if(b.dcome.box>0){ret+=b.dcome.box;b.dcome.box=0;}
+  [4,5,6,8,9,10].forEach(function(n){
+    var cp=b.come.pts[n]; if(cp.f>0||cp.o>0){ret+=cp.f+cp.o;cp.f=0;cp.o=0;}
+    var dp=b.dcome.pts[n]; if(dp.f>0||dp.o>0){ret+=dp.f+dp.o;dp.f=0;dp.o=0;}
+  });
+  if(ret>0) R.push({kind:'info',text:'Working bets down \u2014 $'+ret+' returned'});
+  S.br+=ret;
+}
+function applyRoll(S,d){
+  var t=d[0]+d[1],hard=d[0]===d[1],b=S.bets,R=[];
+  if(b.field>0){var f=b.field;
+    if(t===2){var w=W(f,2,1);S.br+=f+w;R.push({kind:'win',text:'Field 2 (2:1) +$'+w});}
+    else if(t===12){var w2=W(f,3,1);S.br+=f+w2;R.push({kind:'win',text:'Field 12 (3:1) +$'+w2});}
+    else if(t===3||t===4||t===9||t===10||t===11){S.br+=f*2;R.push({kind:'win',text:'Field '+t+' +$'+f});}
+    else R.push({kind:'lose',text:'Field ('+t+') \u2212$'+f});
+    b.field=0;}
+  oneRoll(S,'any7',t===7,4,1,R,'Any 7');
+  oneRoll(S,'anyCraps',(t===2||t===3||t===12),7,1,R,'Any Craps');
+  oneRoll(S,'c2',t===2,30,1,R,'Snake eyes');
+  oneRoll(S,'c3',t===3,15,1,R,'Three');
+  oneRoll(S,'c11',t===11,15,1,R,'Yo (11)');
+  oneRoll(S,'c12',t===12,30,1,R,'Boxcars');
+  [4,6,8,10].forEach(function(n){
+    var s=b.hard[n]; if(s<=0) return;
+    if(t===n){ if(hard){var pr=(n===4||n===10)?[7,1]:[9,1];var w=W(s,pr[0],pr[1]);S.br+=w;R.push({kind:'win',text:'Hard '+n+'! +$'+w});}
+      else{R.push({kind:'lose',text:'Hard '+n+' (easy) \u2212$'+s});b.hard[n]=0;} }
+    else if(t===7){R.push({kind:'lose',text:'Hard '+n+' (7) \u2212$'+s});b.hard[n]=0;}
+  });
+  [[6,'big6'],[8,'big8']].forEach(function(p){
+    var n=p[0],k=p[1],s=b[k]; if(s<=0) return;
+    if(t===n){S.br+=s;R.push({kind:'win',text:'Big '+n+' +$'+s});}
+    else if(t===7){R.push({kind:'lose',text:'Big '+n+' (7) \u2212$'+s});b[k]=0;}
+  });
+  [4,5,6,8,9,10].forEach(function(n){
+    var s=b.place[n]; if(s<=0) return;
+    if(t===n){var pr=placePay(n);var w=W(s,pr[0],pr[1]);S.br+=w;R.push({kind:'win',text:'Place '+n+' +$'+w});}
+    else if(t===7){R.push({kind:'lose',text:'Place '+n+' \u2212$'+s});b.place[n]=0;}
+  });
+  [4,5,6,8,9,10].forEach(function(n){
+    var cp=b.come.pts[n];
+    if(cp.f>0){ if(t===n){var op=oddsPay(n);var ow=cp.o>0?W(cp.o,op[0],op[1]):0;S.br+=cp.f*2+cp.o+ow;R.push({kind:'win',text:'Come '+n+' +$'+(cp.f+ow)});cp.f=0;cp.o=0;}
+      else if(t===7){R.push({kind:'lose',text:'Come '+n+' (7) \u2212$'+(cp.f+cp.o)});cp.f=0;cp.o=0;} }
+    var dp=b.dcome.pts[n];
+    if(dp.f>0){ if(t===7){var lp=layPay(n);var lw=dp.o>0?W(dp.o,lp[0],lp[1]):0;S.br+=dp.f*2+dp.o+lw;R.push({kind:'win',text:'DC '+n+' (7) +$'+(dp.f+lw)});dp.f=0;dp.o=0;}
+      else if(t===n){R.push({kind:'lose',text:'DC '+n+' \u2212$'+(dp.f+dp.o)});dp.f=0;dp.o=0;} }
+  });
+  if(b.come.box>0){var c=b.come.box;
+    if(t===7||t===11){S.br+=c*2;R.push({kind:'win',text:'Come ('+t+') +$'+c});}
+    else if(t===2||t===3||t===12){R.push({kind:'lose',text:'Come ('+t+') \u2212$'+c});}
+    else{b.come.pts[t].f+=c;R.push({kind:'info',text:'Come \u2192 '+t});}
+    b.come.box=0;}
+  if(b.dcome.box>0){var dcv=b.dcome.box;
+    if(t===2||t===3){S.br+=dcv*2;R.push({kind:'win',text:'DC ('+t+') +$'+dcv});}
+    else if(t===12){S.br+=dcv;R.push({kind:'info',text:'DC push (12)'});}
+    else if(t===7||t===11){R.push({kind:'lose',text:'DC ('+t+') \u2212$'+dcv});}
+    else{b.dcome.pts[t].f+=dcv;R.push({kind:'info',text:'DC \u2192 '+t});}
+    b.dcome.box=0;}
+  var cycleEnded=false,pointSet=false,line={pass:null,dont:null};
+  if(S.phase==='comeout'){
+    if(t===7||t===11){
+      if(b.pass>0){S.br+=b.pass*2;R.push({kind:'win',text:'Pass ('+t+') +$'+b.pass});line.pass='win';}
+      if(b.dont>0){R.push({kind:'lose',text:'Don\u2019t ('+t+') \u2212$'+b.dont});line.dont='lose';}
+      b.pass=0;b.dont=0;cycleEnded=true;
+    }else if(t===2||t===3){
+      if(b.pass>0){R.push({kind:'lose',text:'Pass ('+t+') \u2212$'+b.pass});line.pass='lose';}
+      if(b.dont>0){S.br+=b.dont*2;R.push({kind:'win',text:'Don\u2019t ('+t+') +$'+b.dont});line.dont='win';}
+      b.pass=0;b.dont=0;cycleEnded=true;
+    }else if(t===12){
+      if(b.pass>0){R.push({kind:'lose',text:'Pass (12) \u2212$'+b.pass});line.pass='lose';}
+      if(b.dont>0){S.br+=b.dont;R.push({kind:'info',text:'Don\u2019t push (bar 12)'});line.dont='push';}
+      b.pass=0;b.dont=0;cycleEnded=true;
+    }else{ S.point=t;S.phase='point';pointSet=true;R.push({kind:'info',text:'Point is '+t}); }
+  }else{
+    if(t===S.point){var pt=S.point;
+      if(b.pass>0){var op=oddsPay(pt);var ow=b.passOdds>0?W(b.passOdds,op[0],op[1]):0;S.br+=b.pass*2+b.passOdds+ow;R.push({kind:'win',text:'Point '+pt+' \u2014 Pass +$'+(b.pass+ow)});line.pass='win';}
+      if(b.dont>0){R.push({kind:'lose',text:'Point '+pt+' \u2014 Don\u2019t \u2212$'+(b.dont+b.dontOdds)});line.dont='lose';}
+      b.pass=0;b.dont=0;b.passOdds=0;b.dontOdds=0;cycleEnded=true;
+    }else if(t===7){
+      if(b.pass>0){R.push({kind:'lose',text:'Seven out \u2014 Pass \u2212$'+(b.pass+b.passOdds)});line.pass='lose';}
+      if(b.dont>0){var lp=layPay(S.point);var lw=b.dontOdds>0?W(b.dontOdds,lp[0],lp[1]):0;S.br+=b.dont*2+b.dontOdds+lw;R.push({kind:'win',text:'Seven out \u2014 Don\u2019t +$'+(b.dont+lw)});line.dont='win';}
+      b.pass=0;b.dont=0;b.passOdds=0;b.dontOdds=0;cycleEnded=true;
+    }else{ R.push({kind:'info',text:t+' \u2014 roll again'}); }
+  }
+  if(cycleEnded){ returnStanding(S,R); S.phase='comeout'; S.point=null; }
+  return {total:t,hard:hard,msgs:R,cycleEnded:cycleEnded,pointSet:pointSet,line:line};
+}
+/* ════════════════════════════════════════════════════════════════
+   APP STATE + TRAINER (counterfactual optimal-edge bettor)
+   ════════════════════════════════════════════════════════════════ */
+var SAVE_KEY='craps_v2_landscape';
+var BET={
+  pass:{he:1.41,tier:'good'}, dont:{he:1.36,tier:'good'},
+  passOdds:{he:0,tier:'great'}, dontOdds:{he:0,tier:'great'},
+  come:{he:1.41,tier:'good'}, dcome:{he:1.36,tier:'good'},
+  comeOdds:{he:0,tier:'great'}, dcomeOdds:{he:0,tier:'great'},
+  field:{he:2.78,tier:'weak'},
+  place4:{he:6.67,tier:'bad'}, place5:{he:4.0,tier:'weak'}, place6:{he:1.52,tier:'ok'},
+  place8:{he:1.52,tier:'ok'}, place9:{he:4.0,tier:'weak'}, place10:{he:6.67,tier:'bad'},
+  big6:{he:9.09,tier:'bad'}, big8:{he:9.09,tier:'bad'},
+  hard4:{he:11.1,tier:'bad'}, hard6:{he:9.09,tier:'bad'}, hard8:{he:9.09,tier:'bad'}, hard10:{he:11.1,tier:'bad'},
+  any7:{he:16.67,tier:'worst'}, anyCraps:{he:11.1,tier:'bad'},
+  c2:{he:13.9,tier:'worst'}, c3:{he:11.1,tier:'bad'}, c11:{he:11.1,tier:'bad'}, c12:{he:13.9,tier:'worst'}
 };
-var BAD = {field:1, any7:1, hard6:1, hard8:1};
-function rollDice(){return [1+Math.floor(Math.random()*6), 1+Math.floor(Math.random()*6)];}
-function oddsMult(pt){return (pt===4||pt===10)?[2,1]:(pt===5||pt===9)?[3,2]:[6,5];}   // pass odds true payout num/den
-function layMult(pt){return (pt===4||pt===10)?[1,2]:(pt===5||pt===9)?[2,3]:[5,6];}     // don't odds true payout
-function win(stake,nd){return Math.floor(stake*nd[0]/nd[1]);}
+var BAD={place4:1,place10:1,big6:1,big8:1,hard4:1,hard6:1,hard8:1,hard10:1,any7:1,anyCraps:1,c2:1,c3:1,c11:1,c12:1};
+var CHIPS=[1,5,25,100,500];
 
-function freshBets(){return {pass:0,dont:0,passOdds:0,dontOdds:0,place6:0,place8:0,field:0,any7:0,hard6:0,hard8:0};}
-var G = {
-  screen:'game', br:1000, unit:25, chip:25,
-  phase:'comeout', point:null, dice:[3,4], rollNum:0,
-  bets:freshBets(),
-  msgs:[{kind:'info',text:'Place a line bet and roll the come-out. Free odds are the only 0% house-edge bet — always back your line.'}],
-  log:[],
-  preCycleBr:1000, cyc:{hadLine:false,side:'pass',pointSet:false,line:0},
-  cycleWager:0, cycleBad:0,
-  optBr:1000,
-  gs:{ cycles:0, optBr:1000, history:[],
-       cat:{ line:{ok:0,n:0}, odds:{ok:0,n:0}, edge:{wagered:0,bad:0} },
-       tier:{good:0,ok:0,bad:0} }
-};
+function newState(){
+  return {
+    screen:'game', br:1000, chip:25, unit:25,
+    phase:'comeout', point:null, dice:[3,4], rollNum:0,
+    bets:freshBets(),
+    opt:{br:1000,phase:'comeout',point:null,dice:[3,4],bets:freshBets()},
+    preCycleBr:1000, optPreCycle:1000,
+    cyc:{hadLine:false,side:'pass',lineAmt:25,pointSet:false,tookOdds:false},
+    cycleWager:0, cycleBad:0,
+    msgs:[{kind:'info',text:'Make a line bet, then roll. Free odds are the only 0% house-edge bet \u2014 always back your line.'}],
+    lastNet:null, log:[],
+    gs:{cycles:0, optBr:1000, history:[], cat:{line:{ok:0,n:0},odds:{ok:0,n:0},edge:{wagered:0,bad:0}}},
+    _anim:false, _rolling:false
+  };
+}
+var G=newState();
 
-// ── PERSISTENCE ──
-function saveState(){ try{ localStorage.setItem('craps_state', JSON.stringify({
-  br:G.br, unit:G.unit, chip:G.chip, phase:G.phase, point:G.point, dice:G.dice, rollNum:G.rollNum,
-  bets:G.bets, preCycleBr:G.preCycleBr, cyc:G.cyc, cycleWager:G.cycleWager, cycleBad:G.cycleBad,
-  optBr:G.optBr, gs:G.gs, log:G.log.slice(0,40), msgs:G.msgs })); }catch(e){} }
-function loadState(){ try{ var s=JSON.parse(localStorage.getItem('craps_state')); if(!s)return;
+function saveState(){ try{ localStorage.setItem(SAVE_KEY,JSON.stringify({
+  br:G.br,chip:G.chip,unit:G.unit,phase:G.phase,point:G.point,dice:G.dice,rollNum:G.rollNum,
+  bets:G.bets,opt:G.opt,preCycleBr:G.preCycleBr,optPreCycle:G.optPreCycle,cyc:G.cyc,
+  cycleWager:G.cycleWager,cycleBad:G.cycleBad,msgs:G.msgs,lastNet:G.lastNet,log:G.log.slice(0,50),gs:G.gs
+})); }catch(e){} }
+function loadState(){ try{ var s=JSON.parse(localStorage.getItem(SAVE_KEY)); if(!s) return;
   for(var k in s){ if(k in G) G[k]=s[k]; }
-  if(!G.bets) G.bets=freshBets();
+  if(!G.bets||!G.bets.place||!G.bets.come) G.bets=freshBets();
+  if(!G.opt||!G.opt.bets||!G.opt.bets.place) G.opt={br:1000,phase:'comeout',point:null,dice:[3,4],bets:freshBets()};
+  G.screen='game'; G._rolling=false; G._anim=false;
 }catch(e){} }
 
-// ── BETTING ──
-function setChip(v){ G.chip=v; render(); }
-function tierAllows(type){ // which bets are placeable in current phase
-  if(G.phase==='comeout') return type==='pass'||type==='dont'||type==='field'||type==='any7';
-  return type!=='pass'&&type!=='dont'; // once point is on: odds, place, field, props (no new line)
-}
-function addBet(type){
-  if(!tierAllows(type)){ flash('info', BET_META[type].name+' can\'t be placed right now.'); return; }
-  var amt=Math.min(G.chip, G.br); if(amt<=0)return;
-  if(type==='pass'&&G.bets.dont>0){flash('info','You already have a Don\'t bet this come-out.');return;}
-  if(type==='dont'&&G.bets.pass>0){flash('info','You already have a Pass bet this come-out.');return;}
-  if(type==='passOdds'){ if(G.bets.pass<=0){flash('info','Make a Pass line bet first.');return;} var cap=G.bets.pass*3-G.bets.passOdds; amt=Math.min(amt,cap); if(amt<=0){flash('info','Pass odds maxed at 3×.');return;} }
-  if(type==='dontOdds'){ if(G.bets.dont<=0){flash('info','Make a Don\'t bet first.');return;} var cap=G.bets.dont*3-G.bets.dontOdds; amt=Math.min(amt,cap); if(amt<=0){flash('info','Lay odds maxed at 3×.');return;} }
-  G.bets[type]+=amt; G.br-=amt; G.cycleWager+=amt; if(BAD[type])G.cycleBad+=amt;
-  render();
-}
-function clearComeOut(){ if(G.phase!=='comeout')return; var ks=['pass','dont','field','any7']; ks.forEach(function(k){G.br+=G.bets[k];G.cycleWager-=G.bets[k];G.bets[k]=0;}); render(); }
-function flash(kind,text){ G.msgs=[{kind:kind,text:text}]; }
+/* ── helpers ── */
+function d6(){return 1+Math.floor(Math.random()*6);}
+function fmt(n){return Math.round(n).toLocaleString();}
+function fmtChip(a){ return a>=1000 ? '$'+(a/1000).toFixed(a%1000?1:0)+'k' : '$'+a; }
+function chipCls(a){ return a>=500?'pp':a>=100?'bk':a>=25?'gn':a>=5?'rd':'wt'; }
+function toast(kind,text){ G.msgs=[{kind:kind,text:text}]; G.lastNet=null; }
 
-// ── ROLL / RESOLVE ──
-function anyBet(){ for(var k in G.bets) if(G.bets[k]>0) return true; return false; }
-function roll(){
-  if(!anyBet()){ flash('info','Place at least one bet first.'); render(); return; }
-  var d=rollDice(), t=d[0]+d[1]; G.dice=d; G.rollNum++;
-  var R=[]; // result messages this roll
-  if(G.phase==='comeout'){
-    // start a new cycle: snapshot bankroll + set optimal shadow
-    G.preCycleBr=G.br + stakedOnFelt();   // bankroll value including chips currently committed (for net calc)
-    var line = G.bets.pass>0?G.bets.pass:G.bets.dont, side=G.bets.dont>0?'dont':'pass';
-    G.cyc={ hadLine: line>0, side: line>0?side:'pass', line: line>0?line:G.unit, pointSet:false };
-  }
-  resolveOneRoll(t,d,R);                   // field + any7 every roll
-  if(G.phase==='comeout'){
-    if(t===7||t===11){ lineComeout(true,t,R); endCycle(R,t); }
-    else if(t===2||t===3){ lineComeout(false,t,R); endCycle(R,t); }
-    else if(t===12){ if(G.bets.dont>0){G.br+=G.bets.dont; R.push(['info','Come-out 12 — Don\'t pushes (bar 12).']);} if(G.bets.pass>0){R.push(['loss','Come-out 12 — Pass loses -$'+G.bets.pass]);} G.bets.pass=0;G.bets.dont=0; endCycle(R,t); }
-    else { G.point=t; G.phase='point'; G.cyc.pointSet=true; R.push(['info','Point is '+t+'. Back your line with full odds (0% house edge).']); }
-  } else {
-    resolvePointRoll(t,d,R);               // place/hard
-    if(t===G.point){ linePoint(true,R); endCycle(R,t); }
-    else if(t===7){ linePoint(false,R); R.push(['loss','Seven out — place & prop bets down.']); endCycle(R,t); }
-    else { R.push(['info',t+' — no line decision. Roll again.']); }
-  }
-  G.msgs=R.map(function(x){return {kind:x[0],text:x[1]};});
-  logRoll(d,t,R);
-  render();
-}
-function stakedOnFelt(){ var s=0; for(var k in G.bets) s+=G.bets[k]; return s; }
-
-function resolveOneRoll(t,d,R){
-  if(G.bets.field>0){ var f=G.bets.field;
-    if(t===2){ G.br+=f+win(f,[2,1]); R.push(['win','Field 2 — +$'+win(f,[2,1])]); }
-    else if(t===12){ G.br+=f+win(f,[3,1]); R.push(['win','Field 12 — +$'+win(f,[3,1])]); }
-    else if(t===3||t===4||t===9||t===10||t===11){ G.br+=f*2; R.push(['win','Field '+t+' — +$'+f]); }
-    else { R.push(['loss','Field loses ('+t+') -$'+f]); }
-    G.bets.field=0; }
-  if(G.bets.any7>0){ var a=G.bets.any7;
-    if(t===7){ G.br+=a+win(a,[4,1]); R.push(['win','Any 7 — +$'+win(a,[4,1])]); }
-    else { R.push(['loss','Any 7 loses -$'+a]); }
-    G.bets.any7=0; }
-}
-function resolvePointRoll(t,d,R){
-  var hard=(d[0]===d[1]);
-  ['6','8'].forEach(function(n){
-    var pk='place'+n, hk='hard'+n, N=+n;
-    if(G.bets[pk]>0){ if(t===N){ G.br+=win(G.bets[pk],[7,6]); R.push(['win','Place '+n+' hits — +$'+win(G.bets[pk],[7,6])+' (working)']); }
-      else if(t===7){ R.push(['loss','Place '+n+' down -$'+G.bets[pk]]); G.bets[pk]=0; } }
-    if(G.bets[hk]>0){ if(t===N){ if(hard){ G.br+=win(G.bets[hk],[9,1]); R.push(['win','Hard '+n+'! +$'+win(G.bets[hk],[9,1])+' (working)']); } else { R.push(['loss','Hard '+n+' loses (easy '+n+') -$'+G.bets[hk]]); G.bets[hk]=0; } }
-      else if(t===7){ R.push(['loss','Hard '+n+' loses (7) -$'+G.bets[hk]]); G.bets[hk]=0; } }
+function eachBet(cb){
+  var b=G.bets;
+  ['pass','passOdds','dont','dontOdds','field','any7','anyCraps','c2','c3','c11','c12','big6','big8'].forEach(function(k){ if(b[k]>0) cb(k,b[k]); });
+  [4,5,6,8,9,10].forEach(function(n){ if(b.place[n]>0) cb('place'+n,b.place[n]); });
+  [4,6,8,10].forEach(function(n){ if(b.hard[n]>0) cb('hard'+n,b.hard[n]); });
+  if(b.come.box>0) cb('come',b.come.box);
+  if(b.dcome.box>0) cb('dcome',b.dcome.box);
+  [4,5,6,8,9,10].forEach(function(n){
+    if(b.come.pts[n].f>0) cb('come',b.come.pts[n].f);
+    if(b.come.pts[n].o>0) cb('comeOdds',b.come.pts[n].o);
+    if(b.dcome.pts[n].f>0) cb('dcome',b.dcome.pts[n].f);
+    if(b.dcome.pts[n].o>0) cb('dcomeOdds',b.dcome.pts[n].o);
   });
 }
-function lineComeout(passWins,t,R){
-  if(G.bets.pass>0){ if(passWins){G.br+=G.bets.pass*2; R.push(['win','Pass wins ('+t+') +$'+G.bets.pass]);} else R.push(['loss','Pass loses ('+t+') -$'+G.bets.pass]); }
-  if(G.bets.dont>0){ if(!passWins){G.br+=G.bets.dont*2; R.push(['win','Don\'t wins ('+t+') +$'+G.bets.dont]);} else R.push(['loss','Don\'t loses ('+t+') -$'+G.bets.dont]); }
-  G.bets.pass=0;G.bets.dont=0;
+function atRisk(){ var s=0; eachBet(function(id,a){s+=a;}); return s; }
+function anyBet(){ var any=false; eachBet(function(){any=true;}); return any; }
+function blendHE(){ var num=0,den=0; eachBet(function(id,a){var m=BET[id]; if(m){num+=a*m.he;den+=a;}}); return den?(num/den).toFixed(2)+'%':'\u2014'; }
+
+/* ── betting ── */
+function setChip(v){ if(G._rolling) return; G.chip=v; G.unit=v; render(); }
+function stake(id,max,applyFn){
+  if(G._rolling) return;
+  var amt=Math.min(G.chip,G.br); if(max!=null) amt=Math.min(amt,max);
+  if(amt<=0){ toast('info',(max!=null&&max<=0)?'That bet is already maxed.':'Not enough bankroll.'); render(); return; }
+  applyFn(amt); G.br-=amt; G.cycleWager+=amt; if(BAD[id]) G.cycleBad+=amt;
+  if(id==='passOdds'||id==='dontOdds') G.cyc.tookOdds=true;
+  render();
 }
-function linePoint(pointHit,R){
-  var pt=G.point;
-  if(G.bets.pass>0){ if(pointHit){ G.br+=G.bets.pass*2; var w=0; if(G.bets.passOdds>0){w=win(G.bets.passOdds,oddsMult(pt));G.br+=G.bets.passOdds+w;} R.push(['win','Point '+pt+' hit — Pass +$'+(G.bets.pass+w)]); }
-    else { R.push(['loss','Seven out — Pass -$'+(G.bets.pass+G.bets.passOdds)]); } }
-  if(G.bets.dont>0){ if(!pointHit){ G.br+=G.bets.dont*2; var w2=0; if(G.bets.dontOdds>0){w2=win(G.bets.dontOdds,layMult(pt));G.br+=G.bets.dontOdds+w2;} R.push(['win','Seven out — Don\'t +$'+(G.bets.dont+w2)]); }
-    else { R.push(['loss','Point '+pt+' hit — Don\'t -$'+(G.bets.dont+G.bets.dontOdds)]); } }
-  G.bets.pass=0;G.bets.dont=0;G.bets.passOdds=0;G.bets.dontOdds=0;
+function betLine(side){
+  if(G.phase!=='comeout'){ toast('info','Line bets only on the come-out.'); render(); return; }
+  if(side==='pass'&&G.bets.dont>0){ toast('info','You already have a Don\u2019t bet this come-out.'); render(); return; }
+  if(side==='dont'&&G.bets.pass>0){ toast('info','You already have a Pass bet this come-out.'); render(); return; }
+  stake(side,null,function(a){G.bets[side]+=a;});
+}
+function betLineOdds(){
+  if(G.phase!=='point'){ toast('info','Odds go up after a point is set.'); render(); return; }
+  if(G.bets.pass>0){ var cap=oddsCapMult(G.point)*G.bets.pass-G.bets.passOdds; stake('passOdds',cap,function(a){G.bets.passOdds+=a;}); return; }
+  if(G.bets.dont>0){ var cap2=6*G.bets.dont-G.bets.dontOdds; stake('dontOdds',cap2,function(a){G.bets.dontOdds+=a;}); return; }
+  toast('info','Make a Pass / Don\u2019t bet first.'); render();
+}
+function betCome(){ if(G.phase!=='point'){ toast('info','Come bets go up once a point is on.'); render(); return; } stake('come',null,function(a){G.bets.come.box+=a;}); }
+function betDcome(){ if(G.phase!=='point'){ toast('info','Don\u2019t Come bets go up once a point is on.'); render(); return; } stake('dcome',null,function(a){G.bets.dcome.box+=a;}); }
+function betComeOdds(n){ if(G.bets.come.pts[n].f<=0) return; var cap=oddsCapMult(n)*G.bets.come.pts[n].f-G.bets.come.pts[n].o; stake('comeOdds',cap,function(a){G.bets.come.pts[n].o+=a;}); }
+function betDcomeOdds(n){ if(G.bets.dcome.pts[n].f<=0) return; var cap=6*G.bets.dcome.pts[n].f-G.bets.dcome.pts[n].o; stake('dcomeOdds',cap,function(a){G.bets.dcome.pts[n].o+=a;}); }
+function betPlace(n){ if(G.phase!=='point'){ toast('info','Place bets go up once a point is on.'); render(); return; } stake('place'+n,null,function(a){G.bets.place[n]+=a;}); }
+function betField(){ stake('field',null,function(a){G.bets.field+=a;}); }
+function betBig(n){ stake('big'+n,null,function(a){G.bets['big'+n]+=a;}); }
+function betHard(n){ stake('hard'+n,null,function(a){G.bets.hard[n]+=a;}); }
+function betProp(id){ stake(id,null,function(a){G.bets[id]+=a;}); }
+
+/* clear removable (non-contract) bets */
+function clearBets(){
+  if(G._rolling) return; var refunded=0,b=G.bets;
+  function take(id,amt,zero){ refunded+=amt; G.br+=amt; G.cycleWager-=amt; if(BAD[id]) G.cycleBad-=amt; zero(); }
+  if(G.phase==='comeout'){ if(b.pass>0) take('pass',b.pass,function(){b.pass=0;}); if(b.dont>0) take('dont',b.dont,function(){b.dont=0;}); }
+  if(b.field>0) take('field',b.field,function(){b.field=0;});
+  ['any7','anyCraps','c2','c3','c11','c12','big6','big8'].forEach(function(k){ if(b[k]>0) take(k,b[k],function(){b[k]=0;}); });
+  [4,5,6,8,9,10].forEach(function(n){ if(b.place[n]>0) take('place'+n,b.place[n],function(){b.place[n]=0;}); });
+  [4,6,8,10].forEach(function(n){ if(b.hard[n]>0) take('hard'+n,b.hard[n],function(){b.hard[n]=0;}); });
+  if(b.passOdds>0) take('passOdds',b.passOdds,function(){b.passOdds=0;});
+  if(b.dontOdds>0) take('dontOdds',b.dontOdds,function(){b.dontOdds=0;});
+  [4,5,6,8,9,10].forEach(function(n){ if(b.come.pts[n].o>0) take('comeOdds',b.come.pts[n].o,function(){b.come.pts[n].o=0;}); if(b.dcome.pts[n].o>0) take('dcomeOdds',b.dcome.pts[n].o,function(){b.dcome.pts[n].o=0;}); });
+  if(G.cycleWager<0) G.cycleWager=0; if(G.cycleBad<0) G.cycleBad=0;
+  toast('info', refunded>0?('Removable bets cleared \u2014 $'+refunded+' back.'):'Nothing to clear (contract bets stay up).');
+  render();
 }
 
-// ── COUNTERFACTUAL: optimal-edge bettor (same line side/size, always full 3× odds, no props) ──
-function optResolve(kind,t){
-  var c=G.cyc, line=c.line, pass=(c.side==='pass'), pt=G.point;
-  if(kind==='comeout'){
-    if(pass){ if(t===7||t===11)G.optBr+=line; else if(t===2||t===3||t===12)G.optBr-=line; }
-    else { if(t===7||t===11)G.optBr-=line; else if(t===2||t===3)G.optBr+=line; /* 12 push */ }
-  } else if(kind==='pointHit'){
-    if(pass)G.optBr+=line+win(line*3,oddsMult(pt)); else G.optBr-=line+line*3;
-  } else if(kind==='sevenOut'){
-    if(pass)G.optBr-=line+line*3; else G.optBr+=line+win(line*3,layMult(pt));
-  }
+/* ── optimal shadow: always plays the line at the player's stake with max free odds ── */
+function shadowPlaceLine(){
+  G.opt.bets=freshBets(); G.opt.phase='comeout'; G.opt.point=null;
+  var amt=Math.min(G.cyc.lineAmt,G.opt.br); if(amt>0){ G.opt.bets[G.cyc.side]+=amt; G.opt.br-=amt; }
+}
+function shadowMaxOdds(){
+  if(G.opt.phase!=='point') return; var pt=G.opt.point;
+  if(G.opt.bets.pass>0 && G.opt.bets.passOdds<=0){ var cap=oddsCapMult(pt)*G.opt.bets.pass; var a=Math.min(cap,G.opt.br); if(a>0){G.opt.bets.passOdds+=a;G.opt.br-=a;} }
+  if(G.opt.bets.dont>0 && G.opt.bets.dontOdds<=0){ var cap2=6*G.opt.bets.dont; var a2=Math.min(cap2,G.opt.br); if(a2>0){G.opt.bets.dontOdds+=a2;G.opt.br-=a2;} }
 }
 
-// ── CYCLE END: grade + record ──
-function endCycle(R,t){
-  var kind = (G.phase==='comeout') ? 'comeout' : (t===G.point?'pointHit':'sevenOut');
-  optResolve(kind,t);
-  var net = G.br - G.preCycleBr;            // player's realized net this cycle
-  var optNet;                               // optimal's net this cycle
-  // recompute optNet as delta we just applied:
-  optNet = G.optBr - G.gs.optBr;
-  // grading
+/* ── grading at cycle end ── */
+function gradeCycle(net,optNet){
   var gc=G.gs.cat;
-  gc.line.n++; if(G.cyc.hadLine)gc.line.ok++;
-  var oddsTaken = false;
-  if(G.cyc.pointSet && G.cyc.hadLine){ oddsTaken=true; }  // set below from snapshot
-  // odds discipline only graded when a point was set and a line bet existed
-  // (oddsTaken determined from whether odds were on at resolution — captured via cyc)
-  if(G.cyc.pointSet && G.cyc.hadLine){ gc.odds.n++; if(G.cyc.tookOdds)gc.odds.ok++; }
-  gc.edge.wagered += G.cycleWager; gc.edge.bad += G.cycleBad;
-  G.gs.cycles++; G.gs.optBr=G.optBr;
-  G.gs.history.push({num:G.gs.cycles, net:net, optNet:optNet, hadLine:G.cyc.hadLine, point:(kind==='comeout'?null:G.cyc.linePoint||G.point),
-    wager:G.cycleWager, bad:G.cycleBad, brAfter:G.br, optAfter:Math.round(G.optBr), tookOdds:!!G.cyc.tookOdds, pointSet:G.cyc.pointSet});
-  if(G.gs.history.length>120)G.gs.history=G.gs.history.slice(-120);
-  // reset cycle accumulators + table
-  G.phase='comeout'; G.point=null; G.bets=freshBets(); G.cycleWager=0; G.cycleBad=0;
-  if(G.br<0)G.br=0;
+  gc.line.n++; if(G.cyc.hadLine) gc.line.ok++;
+  if(G.cyc.pointSet && G.cyc.hadLine){ gc.odds.n++; if(G.cyc.tookOdds) gc.odds.ok++; }
+  gc.edge.wagered+=G.cycleWager; gc.edge.bad+=G.cycleBad;
+  G.gs.cycles++;
+  G.gs.history.push({num:G.gs.cycles,net:Math.round(net),optNet:Math.round(optNet),
+    hadLine:G.cyc.hadLine,tookOdds:!!G.cyc.tookOdds,pointSet:!!G.cyc.pointSet,wager:G.cycleWager,bad:G.cycleBad});
+  if(G.gs.history.length>150) G.gs.history=G.gs.history.slice(-150);
+  G.gs.optBr=G.opt.br;
+  G.cycleWager=0; G.cycleBad=0;
+}
+function blendPct(){ var c=G.gs.cat,parts=[];
+  if(c.line.n) parts.push(c.line.ok/c.line.n);
+  if(c.odds.n) parts.push(c.odds.ok/c.odds.n);
+  if(c.edge.wagered) parts.push(1-c.edge.bad/c.edge.wagered);
+  if(!parts.length) return null; var s=0; parts.forEach(function(p){s+=p;}); return Math.round(100*s/parts.length); }
+
+/* ── ROLL ── */
+function stakedOnFelt(){ return atRisk(); }
+function roll(){
+  if(G._rolling) return;
+  if(G.phase==='comeout' && !anyBet()){ toast('info','Place a line bet before the come-out roll.'); render(); return; }
+  var d=[d6(),d6()];
+  // cycle-start bookkeeping (player + shadow) on come-out
+  if(G.phase==='comeout'){
+    G.preCycleBr=G.br+stakedOnFelt();
+    G.cyc={ hadLine:(G.bets.pass>0||G.bets.dont>0), side:(G.bets.dont>0?'dont':'pass'),
+            lineAmt:(G.bets.pass>0?G.bets.pass:(G.bets.dont>0?G.bets.dont:G.unit)), pointSet:false, tookOdds:false };
+    G.optPreCycle=G.opt.br;
+    shadowPlaceLine();
+  }
+  shadowMaxOdds();
+  if(G.phase==='point' && ((G.bets.pass>0&&G.bets.passOdds>0)||(G.bets.dont>0&&G.bets.dontOdds>0))) G.cyc.tookOdds=true;
+  var pr=applyRoll(G,d);
+  applyRoll(G.opt,d);
+  G.dice=d; G.rollNum++; G._anim=true;
+  if(pr.pointSet) G.cyc.pointSet=true;
+  // messages + log
+  G.msgs=pr.msgs.slice(-5);
+  if(G.br<0) G.br=0;
+  if(pr.cycleEnded){
+    var net=G.br-G.preCycleBr, optNet=G.opt.br-G.optPreCycle;
+    gradeCycle(net,optNet); G.lastNet=Math.round(net);
+  } else { G.lastNet=null; }
+  logRoll(d,pr);
+  saveState();
+  // brief roll lock + dice tumble
+  G._rolling=true; render();
+  setTimeout(function(){ G._rolling=false; render(); }, 430);
+}
+function logRoll(d,pr){
+  var head='#'+G.rollNum+' ['+d[0]+'+'+d[1]+'='+pr.total+'] ';
+  var notes=pr.msgs.filter(function(m){return m.kind!=='info';}).map(function(m){return m.text;}).join(' \u00b7 ');
+  if(!notes && pr.msgs.length) notes=pr.msgs[pr.msgs.length-1].text;
+  G.log.unshift(head+(notes||'')); if(G.log.length>50) G.log.pop();
+}
+function resetAll(){
+  var fresh=newState(); fresh.chip=G.chip; fresh.unit=G.unit;
+  for(var k in fresh){ G[k]=fresh[k]; }
+  toast('info','Bankroll & stats reset to $1,000.'); render();
+}
+/* ════════════════════════════════════════════════════════════════
+   RENDER — landscape table
+   ════════════════════════════════════════════════════════════════ */
+function pips(v){
+  var map={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+  var on=map[v]||[],s=''; for(var i=0;i<9;i++){ s+='<i'+(on.indexOf(i)>=0?' class="on"':'')+'></i>'; } return s;
+}
+function dieHTML(v,anim){ return '<div class="die'+(anim?' shake':'')+'"><div class="pg">'+pips(v)+'</div></div>'; }
+function betChip(amt,sizeCls,posCls,tag){
+  return '<div class="bchip '+sizeCls+' '+chipCls(amt)+' '+posCls+'">'+(tag?'<span class="tg">'+tag+'</span>':'')+fmtChip(amt)+'</div>';
+}
+function lineChip(amt,tag){
+  return '<div class="bchip sz-f '+chipCls(amt)+'" style="bottom:2px;left:8px"><span class="tg">'+tag+'</span>'+fmtChip(amt)+'</div>';
+}
+function numChips(n){
+  var b=G.bets,h='';
+  var cf=b.come.pts[n].f, co=b.come.pts[n].o;
+  if(cf>0){ h+='<span style="position:absolute;top:3px;left:3px;z-index:6;cursor:pointer" onclick="event.stopPropagation();betComeOdds('+n+')">'
+    +'<div class="bchip sz-f '+chipCls(cf)+'" style="position:relative;top:0;left:0"><span class="tg">C</span>'+fmtChip(cf)+'</div>'
+    +(co>0?'<div class="bchip sz-o '+chipCls(co)+'" style="position:absolute;top:15px;left:15px">'+fmtChip(co)+'</div>':'')+'</span>'; }
+  var df=b.dcome.pts[n].f, dor=b.dcome.pts[n].o;
+  if(df>0){ h+='<span style="position:absolute;top:3px;right:3px;z-index:6;cursor:pointer" onclick="event.stopPropagation();betDcomeOdds('+n+')">'
+    +'<div class="bchip sz-f '+chipCls(df)+'" style="position:relative;top:0;left:0"><span class="tg">D</span>'+fmtChip(df)+'</div>'
+    +(dor>0?'<div class="bchip sz-o '+chipCls(dor)+'" style="position:absolute;top:15px;right:15px">'+fmtChip(dor)+'</div>':'')+'</span>'; }
+  if(b.place[n]>0){ h+=betChip(b.place[n],'sz-f','cstack-place','P'); }
+  return h;
+}
+function numBox(n){
+  var word=n===6?'SIX':n===9?'NINE':(''+n);
+  var co=G.phase==='comeout', isPoint=(!co&&G.point===n), live=!co;
+  var tier=(n===6||n===8)?'t-ok':(n===5||n===9)?'t-weak':'t-bad';
+  var cls='cell numbox '+tier+(isPoint?' pointbox':'')+(G.bets.place[n]>0?' has':'')+(live?' live':' dis');
+  return '<div class="'+cls+'"'+(live?' onclick="betPlace('+n+')"':'')+'>'
+    +(isPoint?'<div class="puck on">ON</div>':'')
+    +'<div class="nlab">'+word+'</div><div class="pstrip">place</div>'+numChips(n)+'</div>';
 }
 
-// capture odds-taken at the moment of point resolution (before bets cleared)
-var _linePointOrig = linePoint;
-linePoint = function(pointHit,R){ G.cyc.tookOdds = (G.bets.passOdds>0||G.bets.dontOdds>0); G.cyc.linePoint=G.point; _linePointOrig(pointHit,R); };
+function gameHTML(){
+  var co=G.phase==='comeout';
+  var pct=blendPct(), gap=Math.round(G.opt.br-G.br);
+  var optCol=gap>0?'#ec5b4c':gap<0?'#39d07f':'#6f8f7c';
+  var qcol=pct===null?'#6f8f7c':pct>=85?'#39d07f':pct>=65?'#f0c040':'#ec5b4c';
 
-function logRoll(d,t,R){ var head='#'+G.rollNum+' ['+d[0]+'+'+d[1]+'='+t+'] ';
-  var summary=R.filter(function(x){return x[0]!=='info';}).map(function(x){return x[1];}).join(' · ')|| (R.length?R[R.length-1][1]:'');
-  G.log.unshift(head+summary); if(G.log.length>40)G.log.pop(); }
+  /* TOP BAR */
+  var top='<div class="top"><div class="brk"><div class="v">$'+fmt(G.br)+'</div>'
+    +'<div class="s">Optimal <b style="color:'+optCol+'">$'+fmt(G.opt.br)+'</b></div></div>'
+    +'<div class="spacer"></div>'
+    +'<div class="qpill" style="color:'+qcol+';border-color:'+qcol+'">'+(pct!==null?pct+'% bets':'Bet quality')+'</div>'
+    +'<button class="btn navb" onclick="G.screen=\'stats\';render()">Stats'+(G.gs.cycles?' ('+G.gs.cycles+')':'')+'</button></div>';
 
-function resetBankroll(){ G.br=1000; G.optBr=1000; G.bets=freshBets(); G.phase='comeout'; G.point=null;
-  G.cycleWager=0; G.cycleBad=0; G.gs={cycles:0,optBr:1000,history:[],cat:{line:{ok:0,n:0},odds:{ok:0,n:0},edge:{wagered:0,bad:0}},tier:{good:0,ok:0,bad:0}};
-  flash('info','Bankroll & stats reset to $1,000.'); render(); }
+  /* FELT */
+  var nums=''; [4,5,6,8,9,10].forEach(function(n){ nums+=numBox(n); });
 
-// ════════════ RENDER ════════════
-function blendPct(){ var c=G.gs.cat; var parts=[];
-  if(c.line.n)parts.push(c.line.ok/c.line.n);
-  if(c.odds.n)parts.push(c.odds.ok/c.odds.n);
-  if(c.edge.wagered)parts.push(1 - c.edge.bad/c.edge.wagered);
-  if(!parts.length)return null; var s=0; parts.forEach(function(p){s+=p;}); return Math.round(100*s/parts.length); }
+  var dcBox='<div class="cell dc t-good'+(G.bets.dcome.box>0?' has':'')+(co?' dis':' live')+'"'+(co?'':' onclick="betDcome()"')
+    +'><span class="lab">DON\u2019T COME</span>'+(G.bets.dcome.box>0?betChip(G.bets.dcome.box,'sz-f','cstack-mid','D'):'')+'</div>';
+  var comeBar='<div class="cell come t-good'+(G.bets.come.box>0?' has':'')+(co?' dis':' live')+'"'+(co?'':' onclick="betCome()"')
+    +'><span class="lab">COME</span>'+(G.bets.come.box>0?betChip(G.bets.come.box,'sz-f','cstack-mid','C'):'')+'</div>';
 
-function zoneHTML(type,extra){
-  var m=BET_META[type], amt=G.bets[type], on=amt>0, dis=!tierAllows(type) && !on;
-  return '<div class="zone t-'+m.tier+(on?' on':'')+(dis?' dis':'')+'" onclick="addBet(\''+type+'\')">'+
-    '<div class="zt">'+m.name+(extra||'')+'</div><div class="za">$'+amt+'</div><div class="zhe">'+m.he+(m.tier==='good'?'':' edge')+'</div></div>';
+  var fieldZone='<div class="cell field t-weak'+(G.bets.field>0?' has':'')+' live" onclick="betField()">'
+    +'<div class="ftitle">FIELD</div><div class="fnums">'
+    +'<span class="fn dbl">2<small>2:1</small></span><span class="fn">3</span><span class="fn">4</span>'
+    +'<span class="fn">9</span><span class="fn">10</span><span class="fn">11</span>'
+    +'<span class="fn dbl">12<small>3:1</small></span></div>'
+    +(G.bets.field>0?betChip(G.bets.field,'sz-f','cstack-mid',null):'')+'</div>';
+
+  function hardCell(n){ var pay=(n===4||n===10)?'7:1':'9:1';
+    return '<div class="cell hard t-bad'+(G.bets.hard[n]>0?' has':'')+' live" onclick="betHard('+n+')">'
+      +'<div class="hl" style="font-size:11px;color:var(--cream);font-weight:700;letter-spacing:.5px">HARD '+n+'</div>'
+      +'<div class="hl">'+pay+'</div>'+(G.bets.hard[n]>0?betChip(G.bets.hard[n],'sz-o','cstack-mid',null):'')+'</div>'; }
+  function crapsCell(id,label,pay,tier){
+    return '<div class="cell cnum '+tier+(G.bets[id]>0?' has':'')+' live" onclick="betProp(\''+id+'\')">'
+      +'<span class="cn">'+label+'</span><span class="cp">'+pay+'</span>'+(G.bets[id]>0?betChip(G.bets[id],'sz-o','cstack-mid',null):'')+'</div>'; }
+  var props='<div class="props">'
+    +'<div class="cell any7 t-worst'+(G.bets.any7>0?' has':'')+' live" onclick="betProp(\'any7\')"><span class="lab">ANY 7 &middot; 4:1</span>'+(G.bets.any7>0?betChip(G.bets.any7,'sz-o','cstack-mid',null):'')+'</div>'
+    +'<div class="hards">'+hardCell(4)+hardCell(10)+hardCell(6)+hardCell(8)+'</div>'
+    +'<div class="craps4">'+crapsCell('c2','2','30:1','t-worst')+crapsCell('c3','3','15:1','t-bad')+crapsCell('c11','11','15:1','t-bad')+crapsCell('c12','12','30:1','t-worst')+'</div>'
+    +'</div>';
+
+  var bigs='<div class="bigs">'
+    +'<div class="cell big t-bad'+(G.bets.big6>0?' has':'')+' live" onclick="betBig(6)"><span class="lab">BIG 6</span>'+(G.bets.big6>0?betChip(G.bets.big6,'sz-o','cstack-mid',null):'')+'</div>'
+    +'<div class="cell big t-bad'+(G.bets.big8>0?' has':'')+' live" onclick="betBig(8)"><span class="lab">BIG 8</span>'+(G.bets.big8>0?betChip(G.bets.big8,'sz-o','cstack-mid',null):'')+'</div></div>';
+
+  var dpass='<div class="cell dpass t-good'+(G.bets.dont>0?' has':'')+(co?' live':' dis')+'"'+(co?' onclick="betLine(\'dont\')"':'')
+    +'><span class="lab">DON\u2019T PASS BAR</span>'+(G.bets.dont>0?lineChip(G.bets.dont,'D'):'')+'</div>';
+  var hasOdds=(G.bets.passOdds>0||G.bets.dontOdds>0);
+  var oddsLbl=G.bets.dont>0?'LAY ODDS':'PASS ODDS';
+  var oddsbar='<div class="cell oddsbar t-great'+(hasOdds?' has':'')+(co?' dis':' live')+'"'+(co?'':' onclick="betLineOdds()"')
+    +'><span class="lab">'+oddsLbl+' &middot; 0% EDGE</span>'+(G.bets.passOdds>0?lineChip(G.bets.passOdds,'O'):'')+(G.bets.dontOdds>0?lineChip(G.bets.dontOdds,'LO'):'')+'</div>';
+  var passLine='<div class="cell pass t-good'+(G.bets.pass>0?' has':'')+(co?' live':' dis')+'"'+(co?' onclick="betLine(\'pass\')"':'')
+    +'><span class="lab">PASS LINE</span>'+(G.bets.pass>0?lineChip(G.bets.pass,'P'):'')+'</div>';
+
+  var tray='<div class="tray">'+dieHTML(G.dice[0],G._anim)+dieHTML(G.dice[1],G._anim)+'</div>';
+  var offpuck=co?'<div class="puck off puck-off-slot">OFF</div>':'';
+
+  var toastH='<div class="toast">';
+  G.msgs.forEach(function(m){ toastH+='<div class="msg m-'+m.kind+'">'+m.text+'</div>'; });
+  if(G.lastNet!==null){ var nc=G.lastNet>0?'#39d07f':G.lastNet<0?'#ec5b4c':'#a9c4b5';
+    toastH+='<div class="netbadge" style="color:'+nc+';border-color:'+nc+';background:rgba(8,20,14,.92)">Cycle net '+(G.lastNet>=0?'+$':'\u2212$')+Math.abs(G.lastNet)+'</div>'; }
+  toastH+='</div>';
+
+  var felt='<div class="rail"><div class="felt">'
+    +'<div class="nums">'+nums+'</div>'
+    +'<div class="r2">'+dcBox+comeBar+'</div>'
+    +'<div class="mid">'+fieldZone+props+bigs+'</div>'
+    +dpass+oddsbar+passLine
+    +tray+offpuck+toastH
+    +'</div></div>';
+  G._anim=false;
+
+  /* BOTTOM RAIL */
+  var chips='<div class="chips">'+CHIPS.map(function(v){
+    return '<div class="chip '+chipCls(v)+(G.chip===v?' sel':'')+'" onclick="setChip('+v+')"><span class="ring"></span>$'+v+'</div>';
+  }).join('')+'</div>';
+  var tip=co
+    ? 'Bet PASS or DON\u2019T (~1.4%). Skip Field &amp; props.'
+    : (G.bets.pass>0||G.bets.dont>0)
+       ? 'Point '+G.point+': tap '+(G.bets.dont>0?'LAY':'PASS')+' ODDS \u2014 0% edge.'
+       : 'Point '+G.point+': COME + odds mirrors the line.';
+  var phLine=co?'<span class="co">COME-OUT</span>':'<span class="pn">POINT '+G.point+'</span>';
+  var readout='<div class="readout"><div class="ph">'+phLine+'</div>'
+    +'<div class="ar">At risk <b>$'+atRisk()+'</b> &middot; edge <b>'+blendHE()+'</b></div>'
+    +'<span class="tip">'+tip+'</span></div>';
+  var actcol='<div class="actcol">'
+    +'<button class="btn minib" onclick="clearBets()"'+(G._rolling?' disabled':'')+'>Clear</button>'
+    +'<button class="btn rollb" onclick="roll()"'+(G._rolling?' disabled':'')+'>ROLL</button></div>';
+  var bot='<div class="bot">'+chips+readout+actcol+'</div>';
+
+  return top+felt+bot;
 }
 
 function render(){
   saveState();
   var el=document.getElementById('app');
-  var pct=blendPct();
-  var gap=Math.round(G.optBr-G.br);
-
-  if(G.screen==='stats'){ el.innerHTML=statsHTML(pct,gap); return; }
-
-  var diceH=G.dice.map(function(d){return '<div class="die">'+PIPS[d]+'</div>';}).join('');
-  var msgsH=G.msgs.map(function(m){return '<div class="res res-'+m.kind+'">'+m.text+'</div>';}).join('');
-  // live blended house edge of current bets
-  var heNum=0,heDen=0,EDGE={pass:1.41,dont:1.36,passOdds:0,dontOdds:0,place6:1.52,place8:1.52,field:2.78,any7:16.7,hard6:9.1,hard8:9.1};
-  for(var k in G.bets){ if(G.bets[k]>0){ heNum+=G.bets[k]*EDGE[k]; heDen+=G.bets[k]; } }
-  var blendHE = heDen? (heNum/heDen).toFixed(2)+'%' : '—';
-
-  var pass=G.bets.pass>0, dont=G.bets.dont>0;
-  var hint = G.phase==='comeout'
-    ? 'Come-out: bet the <strong>Pass</strong> or <strong>Don\'t Pass</strong> line (~1.4% edge). Avoid Field & props.'
-    : 'Point is <strong>'+G.point+'</strong>. Tap <strong>'+(dont?'Lay odds':'Pass odds')+'</strong> to back your line at full 3× — <strong>0% house edge</strong>.';
-
-  var zonesH;
-  if(G.phase==='comeout'){
-    zonesH = zoneHTML('pass')+zoneHTML('dont')+zoneHTML('field')+zoneHTML('any7');
-  } else {
-    var oddsZone = dont? zoneHTML('dontOdds',' (max $'+(G.bets.dont*3)+')') : zoneHTML('passOdds',' (max $'+(G.bets.pass*3)+')');
-    zonesH = oddsZone+zoneHTML('field')+zoneHTML('place6')+zoneHTML('place8')+zoneHTML('hard6')+zoneHTML('hard8')+zoneHTML('any7');
-  }
-
-  var chips=[5,25,100].map(function(v){return '<span class="chip chip-'+v+(G.chip===v?' sel':'')+'" onclick="setChip('+v+')">$'+v+'</span>';}).join('');
-
-  el.innerHTML=
-    '<div class="topbar"><div><div class="bankroll-main">$'+G.br.toLocaleString()+'</div>'+
-      '<div class="bankroll-sub">Optimal: <b style="color:'+(gap>0?'#e74c3c':gap<0?'#2ecc71':'#8888aa')+'">$'+Math.round(G.optBr).toLocaleString()+'</b>'+
-        (pct!==null?' &nbsp;<b style="color:'+(pct>=85?'#2ecc71':pct>=65?'#f39c12':'#e74c3c')+'">'+pct+'% bets</b>':'')+'</div></div>'+
-      '<button class="nav-btn" onclick="G.screen=\'stats\';render()">📊 Stats'+(G.gs.cycles?' ('+G.gs.cycles+')':'')+'</button></div>'+
-    '<div class="felt">'+
-      '<div class="statline"><span>Roll #'+G.rollNum+'</span><span class="point-pill '+(G.point?'point-on':'point-off')+'">'+(G.point?'POINT '+G.point:'COME-OUT')+'</span></div>'+
-      '<div class="dice-row">'+diceH+'</div>'+
-      '<div class="he-read">Blended house edge of your bets: <b>'+blendHE+'</b></div>'+
-      '<div class="zones">'+zonesH+'</div>'+
-    '</div>'+
-    '<div class="hint">💡 '+hint+'</div>'+
-    msgsH+
-    '<div class="controls">'+
-      '<div class="row"><span class="lbl">Chip:</span>'+chips+
-        (G.phase==='comeout'?'<button class="btn btn-action" style="padding:9px 14px;font-size:13px;min-height:0" onclick="clearComeOut()">Clear bets</button>':'')+
-        '<button class="btn btn-action" style="padding:9px 14px;font-size:13px;min-height:0;border-color:#553399;color:#cc99ff" onclick="resetBankroll()">Reset $1k</button>'+
-      '</div>'+
-      '<div class="row"><button class="btn btn-roll" onclick="roll()">🎲 Roll'+(G.phase==='comeout'?' come-out':'')+'</button>'+
-        '<span class="lbl">Tap a zone above to bet the selected chip.</span></div>'+
-      '<div class="log">'+G.log.slice(0,12).map(function(l){return '<div>'+l+'</div>';}).join('')+'</div>'+
-    '</div>'+
-    '<div class="foot">Bubble craps · single shooter · 3× odds · pass/don\'t + odds graded vs an optimal-edge bettor (same dice). Bets resolve within the current point cycle.</div>';
+  if(G.screen==='stats'){ el.innerHTML=statsHTML(); return; }
+  el.innerHTML=gameHTML();
 }
-
-function statsHTML(pct,gap){
-  var g=G.gs;
-  var cat=[['line','Line discipline','Had a pass/don\'t bet'],['odds','Odds discipline','Took odds on your point'],['edge','Edge avoidance','$ kept off sucker bets']];
-  var catH=cat.map(function(c){
-    var key=c[0], p, sub;
-    if(key==='edge'){ var w=g.cat.edge.wagered; p=w?Math.round(100*(1-g.cat.edge.bad/w)):null; sub=w?('$'+g.cat.edge.bad+' of $'+w+' on bad bets'):'No bets yet'; }
-    else { var cs=g.cat[key]; p=cs.n?Math.round(100*cs.ok/cs.n):null; sub=cs.n?(cs.ok+'/'+cs.n):'No data'; }
-    var col=p===null?'#4466aa':p>=85?'#27ae60':p>=65?'#e67e22':'#e74c3c';
-    return '<div class="cat-top"><span style="color:#a0b8d0;font-size:13px">'+c[1]+'</span><span style="font-weight:700;font-size:13px;color:'+col+'">'+(p!==null?p+'%':'—')+'<span style="color:#4466aa;font-weight:400"> · '+sub+'</span></span></div><div class="pbar"><div class="pbar-fill" style="width:'+(p||0)+'%;background:'+col+'"></div></div>';
+/* ════════════════════════════════════════════════════════════════
+   STATS PAGE
+   ════════════════════════════════════════════════════════════════ */
+function statsHTML(){
+  var g=G.gs, pct=blendPct(), gap=Math.round(G.opt.br-G.br);
+  var cats=[['line','Line discipline','Had a Pass / Don\u2019t bet'],['odds','Odds discipline','Took free odds on your point'],['edge','Edge avoidance','Bankroll kept off sucker bets']];
+  var catH=cats.map(function(c){
+    var key=c[0],p,sub;
+    if(key==='edge'){ var w=g.cat.edge.wagered; p=w?Math.round(100*(1-g.cat.edge.bad/w)):null; sub=w?('$'+g.cat.edge.bad+' of $'+w+' on bad bets'):'No wagers yet'; }
+    else { var cs=g.cat[key]; p=cs.n?Math.round(100*cs.ok/cs.n):null; sub=cs.n?(cs.ok+' / '+cs.n+' rounds'):'No data yet'; }
+    var col=p===null?'#6f8f7c':p>=85?'#39d07f':p>=65?'#f0c040':'#ec5b4c';
+    return '<div class="catrow"><span style="color:#cfe0d6">'+c[1]+'</span><span style="font-weight:700;color:'+col+'">'+(p!==null?p+'%':'\u2014')+'<span style="color:#6f8f7c;font-weight:400"> &middot; '+sub+'</span></span></div><div class="bar"><div style="width:'+(p||0)+'%;background:'+col+'"></div></div>';
   }).join('');
-  var hist=g.history.slice().reverse().slice(0,15).map(function(h){
-    return '<div class="hist-row"><span style="color:#6688aa">#'+h.num+(h.pointSet?' · pt '+(h.point||'?'):' · come-out')+'</span><span style="font-weight:700;color:'+(h.net>0?'#2ecc71':h.net<0?'#e74c3c':'#6688aa')+'">'+(h.net>=0?'+$':'-$')+Math.abs(h.net)+'</span></div>';
-  }).join('')||'<div style="color:#6688aa;font-size:12px">No rounds yet.</div>';
-  return '<div class="stats-page"><div class="stats-hdr"><button class="back-link" onclick="G.screen=\'game\';render()">← back</button>'+
-    '<h2 style="font-size:18px;font-weight:700">Performance Stats</h2></div>'+
-    '<div class="stat-cards">'+
-      '<div class="stat-card"><div class="sc-label">Your bankroll</div><div class="sc-val '+(G.br>=1000?'c-green':'c-red')+'">$'+G.br.toLocaleString()+'</div><div class="sc-sub">'+(G.br-1000>=0?'+':'')+'$'+(G.br-1000)+' vs start</div></div>'+
-      '<div class="stat-card"><div class="sc-label">Optimal bankroll</div><div class="sc-val '+(G.optBr>=1000?'c-green':'c-red')+'">$'+Math.round(G.optBr).toLocaleString()+'</div><div class="sc-sub">same dice, perfect bets</div></div>'+
-      '<div class="stat-card"><div class="sc-label">Bet quality</div><div class="sc-val '+(pct===null?'c-muted':pct>=85?'c-green':pct>=65?'c-amber':'c-red')+'">'+(pct!==null?pct+'%':'—')+'</div><div class="sc-sub">'+g.cycles+' rounds</div></div>'+
-    '</div>'+
-    (g.cycles>0&&gap!==0?'<div class="gap-banner" style="background:'+(gap>0?'#2c0f0f':'#0d3320')+';color:'+(gap>0?'#e74c3c':'#2ecc71')+';border:1px solid '+(gap>0?'#a32d2d':'#1e8449')+'">'+
-      (gap>0?'📉 Perfect bet selection would have you $'+gap+' richer over '+g.cycles+' rounds':'📈 You\'re running $'+Math.abs(gap)+' ahead of optimal — variance, not edge')+'</div>':'')+
-    '<div class="section"><h3>Betting discipline</h3>'+catH+'</div>'+
-    '<div class="section"><h3>Recent rounds</h3>'+hist+'</div>'+
-    '<button class="reset-link" onclick="resetBankroll()">Reset bankroll & stats</button></div>';
+  var hist=g.history.slice().reverse().slice(0,16).map(function(h){
+    var tags=[]; if(!h.hadLine) tags.push('no line'); if(h.pointSet&&h.hadLine&&!h.tookOdds) tags.push('no odds'); if(h.bad>0) tags.push('$'+h.bad+' bad');
+    var tg=tags.length?' &middot; '+tags.join(', '):'';
+    return '<div class="histrow"><span style="color:#6f8f7c">#'+h.num+tg+'</span><span style="font-weight:700;color:'+(h.net>0?'#39d07f':h.net<0?'#ec5b4c':'#6f8f7c')+'">'+(h.net>=0?'+$':'\u2212$')+Math.abs(h.net)+'</span></div>';
+  }).join('')||'<div style="color:#6f8f7c;font-size:12px">No rounds played yet.</div>';
+  var bannerH='';
+  if(g.cycles>0 && gap!==0){
+    bannerH=gap>0
+      ? '<div class="banner" style="background:#2c0f0f;color:#ec5b4c;border:1px solid #a3261a">Perfect bet selection would have you $'+gap+' richer across '+g.cycles+' rounds \u2014 the cost of off-strategy bets.</div>'
+      : '<div class="banner" style="background:#0d3320;color:#39d07f;border:1px solid #1e8449">You\u2019re $'+Math.abs(gap)+' ahead of optimal \u2014 good variance, not a better edge. It evens out.</div>';
+  }
+  var legend='<div class="sect"><h3>Bet quality key (felt edge colors)</h3><div class="legend">'
+    +'<span><i style="background:#7af0b0"></i>0% odds</span><span><i style="background:#39d07f"></i>line ~1.4%</span>'
+    +'<span><i style="background:#5fd0c0"></i>place 6/8 1.5%</span><span><i style="background:#f0c040"></i>field/5/9</span>'
+    +'<span><i style="background:#f08a3c"></i>4/10, big, hard</span><span><i style="background:#ec5b4c"></i>any 7, 2, 12</span></div></div>';
+  return '<div class="stats"><div class="stats-hdr"><button class="back" onclick="G.screen=\'game\';render()">&larr; Back to table</button><h2>Performance</h2></div>'
+    +'<div class="cards">'
+    +'<div class="card"><div class="l">Your bankroll</div><div class="v '+(G.br>=1000?'c-green':'c-red')+'">$'+fmt(G.br)+'</div><div class="sub">'+(G.br-1000>=0?'+':'\u2212')+'$'+Math.abs(G.br-1000)+' vs start</div></div>'
+    +'<div class="card"><div class="l">Optimal bankroll</div><div class="v '+(G.opt.br>=1000?'c-green':'c-red')+'">$'+fmt(G.opt.br)+'</div><div class="sub">same dice, perfect bets</div></div>'
+    +'<div class="card"><div class="l">Bet quality</div><div class="v '+(pct===null?'c-muted':pct>=85?'c-green':pct>=65?'c-amber':'c-red')+'">'+(pct!==null?pct+'%':'\u2014')+'</div><div class="sub">'+g.cycles+' rounds</div></div>'
+    +'</div>'+bannerH
+    +'<div class="sect"><h3>Betting discipline</h3>'+catH+'</div>'
+    +'<div class="sect"><h3>Recent rounds</h3>'+hist+'</div>'
+    +legend
+    +'<button class="resetl" onclick="resetAll()">Reset bankroll &amp; stats</button></div>';
 }
 
-// ── KEYBOARD ──
+/* ── keyboard: Space / Enter / R = roll ── */
 document.addEventListener('keydown',function(e){
-  if(e.metaKey||e.ctrlKey||e.altKey)return; var tag=e.target&&e.target.tagName;
-  if(tag==='INPUT'||tag==='TEXTAREA')return;
-  if(G.screen!=='game')return;
-  if(e.key===' '||e.key==='Enter'||e.key.toLowerCase()==='r'){ e.preventDefault(); roll(); }
+  if(e.metaKey||e.ctrlKey||e.altKey) return;
+  var tag=e.target&&e.target.tagName; if(tag==='INPUT'||tag==='TEXTAREA') return;
+  if(G.screen!=='game') return;
+  if(e.key===' '||e.key==='Enter'||(e.key&&e.key.toLowerCase()==='r')){ e.preventDefault(); roll(); }
 });
 
+/* ── init ── */
 loadState();
 render();
 
-// ── PWA ──
-(function(){ var c=document.createElement('canvas'); c.width=c.height=180; var x=c.getContext('2d');
-  x.fillStyle='#1b6332'; x.beginPath(); x.roundRect(0,0,180,180,28); x.fill();
-  x.fillStyle='#fff'; x.beginPath(); x.roundRect(34,34,52,52,10); x.roundRect(96,96,52,52,10); x.fill();
-  x.fillStyle='#c0392b'; [ [60,60] ].forEach(function(p){x.beginPath();x.arc(p[0],p[1],8,0,7);x.fill();});
-  x.fillStyle='#1a1a1a'; [[110,118],[122,130],[134,142],[110,142],[134,118]].forEach(function(p){x.beginPath();x.arc(p[0],p[1],6,0,7);x.fill();});
+/* ── PWA: generated icon + service worker ── */
+(function(){ try{
+  var c=document.createElement('canvas'); c.width=c.height=192; var x=c.getContext('2d');
+  var g=x.createLinearGradient(0,0,192,192); g.addColorStop(0,'#1f8049'); g.addColorStop(1,'#0a3f21');
+  x.fillStyle=g; x.beginPath(); x.roundRect(0,0,192,192,34); x.fill();
+  x.strokeStyle='rgba(244,236,212,.5)'; x.lineWidth=6; x.beginPath(); x.roundRect(12,12,168,168,26); x.stroke();
+  function die(px,py,s){ x.fillStyle='#f4ecd4'; x.beginPath(); x.roundRect(px,py,s,s,s*0.18); x.fill(); }
+  function dot(px,py,r){ x.fillStyle='#16241b'; x.beginPath(); x.arc(px,py,r,0,7); x.fill(); }
+  die(34,40,60); [[50,56],[78,84]].forEach(function(p){dot(p[0],p[1],6);});
+  die(104,96,60); [[120,112],[148,140],[120,140],[148,112],[134,126]].forEach(function(p){dot(p[0],p[1],6);});
   var l=document.createElement('link'); l.rel='apple-touch-icon'; l.href=c.toDataURL('image/png'); document.head.appendChild(l);
-})();
+}catch(e){} })();
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
 </script>
 </body>

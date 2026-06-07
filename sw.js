@@ -1,6 +1,6 @@
 // Craps PWA — Service Worker. Network-first for the app shell so redeploys
 // reach returning visitors immediately; cache-first for static assets.
-var CACHE = 'craps-v1';
+var CACHE = 'craps-v2';
 var FILES = ['./', './index.html', './sw.js', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){
