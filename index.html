@@ -40,10 +40,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e
 .btn:active{transform:scale(.96);}
 .btn:disabled{opacity:.35;}
 .navb{background:linear-gradient(180deg,#16402a,#0e2c1c);color:#bfe8cd;border-color:#27613f;padding:7px 12px;font-size:13px;}
-.rail{flex:1 1 auto;min-height:0;border-radius:20px;padding:9px;position:relative;
+.rail{flex:1 1 auto;min-height:0;border-radius:20px;padding:9px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
   background:linear-gradient(150deg,var(--wood1),var(--wood2) 45%,var(--wood3));
   box-shadow:0 8px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,210,150,.25),inset 0 -2px 6px rgba(0,0,0,.5);}
-.felt{position:relative;height:100%;width:100%;border-radius:13px;padding:8px;overflow:hidden;
+.felt{position:relative;width:980px;height:384px;flex:0 0 auto;transform-origin:center center;border-radius:13px;padding:8px;overflow:hidden;
   background:radial-gradient(ellipse 110% 130% at 50% 18%,var(--felt) 0%,var(--felt-d) 52%,var(--felt-dd) 100%);
   box-shadow:inset 0 0 40px rgba(0,0,0,.5),inset 0 0 0 2px rgba(244,236,212,.16);
   display:grid;grid-template-rows:auto auto 1fr auto auto auto;gap:5px;}
@@ -131,7 +132,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e
 @keyframes tumble{0%{transform:translateY(-7px) rotate(-22deg);}25%{transform:translateY(3px) rotate(16deg);}
   50%{transform:translateY(-4px) rotate(-12deg);}75%{transform:translateY(2px) rotate(8deg);}100%{transform:translateY(0) rotate(0);}}
 .die.shake{animation:tumble .42s ease-out;}
-.toast{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);z-index:9;display:flex;flex-direction:column;gap:3px;align-items:center;width:max-content;max-width:94%;pointer-events:none;}
+.toast{position:absolute;left:50%;top:56px;transform:translateX(-50%);z-index:9;display:flex;flex-direction:column;gap:3px;align-items:center;width:max-content;max-width:88%;pointer-events:none;}
 .msg{font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.3px;padding:3px 11px;border-radius:7px;border:1px solid;
   background:rgba(8,20,14,.92);backdrop-filter:blur(2px);box-shadow:0 2px 7px rgba(0,0,0,.4);}
 .m-win{color:var(--good);border-color:#1e8449;} .m-lose{color:var(--worst);border-color:#a3261a;} .m-info{color:#a9c4b5;border-color:#2a4d38;}
@@ -635,11 +636,22 @@ function gameHTML(){
   return top+felt+bot;
 }
 
+function fitFelt(){
+  var rail=document.querySelector('.rail'); if(!rail) return;
+  var felt=rail.querySelector('.felt'); if(!felt) return;
+  var cs=getComputedStyle(rail);
+  var availW=rail.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);
+  var availH=rail.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  var FW=felt.offsetWidth||980, FH=felt.offsetHeight||384;
+  var s=Math.min(availW/FW, availH/FH);
+  if(s>0&&isFinite(s)) felt.style.transform='scale('+s+')';
+}
 function render(){
   saveState();
   var el=document.getElementById('app');
   if(G.screen==='stats'){ el.innerHTML=statsHTML(); return; }
   el.innerHTML=gameHTML();
+  fitFelt(); requestAnimationFrame(fitFelt);
 }
 /* ════════════════════════════════════════════════════════════════
    STATS PAGE
@@ -692,6 +704,8 @@ document.addEventListener('keydown',function(e){
 /* ── init ── */
 loadState();
 render();
+window.addEventListener('resize',fitFelt);
+window.addEventListener('orientationchange',function(){ setTimeout(fitFelt,200); });
 
 /* ── PWA: generated icon + service worker ── */
 (function(){ try{
